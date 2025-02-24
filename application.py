@@ -1,14 +1,24 @@
+import turtle
+from random import randrange
 import random
 import time
+import threading
 
 from solarsystem import SolarSystem, Sun, Planet
 
-solar_system = SolarSystem(width = 1800, height = 1000) # Set window dimensions, will change in future when implementing gui
-templateSelected = "default"
+solar_system = SolarSystem(width = 1800, height = 800) # Set window dimensions, will change in future when implementing gui
 startSimulation = False
 choiceSelected = True
 solarSystem = []
 simulationSpeed = 0.01 # Simulation speed of 0.01 is equal to 1x speed (arbitrary units)
+effectiveWidth = 1500 # Range where we spawn the planets
+effectiveHeight = 750 # Here as well
+minRadiusSun = 200 # Minimum distance from the Sun
+# All of these only apply to the random configuration
+
+# while not startSimulation:
+#     solar_system.draw_planets()
+
 
 def get_float(prompt):
     while True:
@@ -38,10 +48,39 @@ while not startSimulation:
 
     if firstChoice == 1:
         choiceSelected = True
+        solarSystem = {
+            "planets": (
+                Planet("", None, solar_system, 500, (50, 0), (0, 11)),
+                Planet("", None, solar_system, 10, (-350, 0), (0, -10)),
+                Planet("", None, solar_system, 5, (0, 200), (-2, -7)),
+            ),
+            "suns": (
+                Sun("", solar_system, 10000, (-200, 0), (0, 3)),
+                Sun("", solar_system, 10000, (200, 0), (0, -4)),
+            )
+        }
         break
     elif firstChoice == 3:
         choiceSelected = True
-        templateSelected = "random"
+        solarSystem = {
+            "planets": [
+                Planet(
+                    "",
+                    None,
+                    solar_system,
+                    randrange(200, 500),
+                    (  # Extra logic to ensure the planets don't spawn too close to the sun
+                        randrange(int(-effectiveWidth / 2), minRadiusSun) if bool(random.getrandbits(1)) else randrange(
+                            minRadiusSun, int(effectiveWidth / 2)),
+                        randrange(int(-effectiveHeight / 2), minRadiusSun) if bool(
+                            random.getrandbits(1)) else randrange(minRadiusSun, int(effectiveHeight / 2))),
+                    (randrange(-5, 5), randrange(-5, 5))
+                ) for i in range(randrange(3, 10))
+            ],
+            "suns": [
+                Sun("", solar_system, 10000, (0, 0), (0, 0)),
+            ]
+        }
         break
     elif firstChoice == 2:
         templateSelected = "custom"
@@ -67,7 +106,10 @@ Initial Velocity: X: {astroObject.velocity[0]} | Y: {astroObject.velocity[1]}
 
             if secondChoice == 1:
                 nameIn = input("Enter name (optional): ")
-                massIn = float(input("Enter mass: "))
+                while True:
+                    massIn = float(input("Enter mass: "))
+                    if massIn > 0: break
+                    else: print("Mass must be positive")
                 xIn = float(input("Enter X position: "))
                 yIn = float(input("Enter Y position: "))
                 xVelIn = float(input("Enter X velocity: "))
@@ -76,7 +118,10 @@ Initial Velocity: X: {astroObject.velocity[0]} | Y: {astroObject.velocity[1]}
                 continue
             elif secondChoice == 2:
                 nameIn = input("Enter name (optional): ")
-                massIn = float(input("Enter mass: "))
+                while True:
+                    massIn = float(input("Enter mass: "))
+                    if massIn > 0: break
+                    else: print("Mass must be positive")
                 colorIn = get_color_input()
                 xIn = float(input("Enter X position: "))
                 yIn = float(input("Enter Y position: "))
@@ -86,7 +131,7 @@ Initial Velocity: X: {astroObject.velocity[0]} | Y: {astroObject.velocity[1]}
                 continue
             elif secondChoice == 3:
                 choiceSelected = True
-
+                startSimulation = True
                 break
             elif secondChoice == 4:
                 quit()
@@ -94,48 +139,11 @@ Initial Velocity: X: {astroObject.velocity[0]} | Y: {astroObject.velocity[1]}
                 print("Please enter a valid option")
                 continue
 
-from random import randrange
-
-effectiveWidth = 1500 # Range where we spawn the planets
-effectiveHeight = 750 # Here as well
-minRadiusSun = 200 # Minimum distance from the Sun
-# All of these only apply to the random configuration
 
 if choiceSelected:
     simulationSpeed = 1 / int(input("""How fast would you like to run the simulation? Default: 1
 """)) * 0.01
     startSimulation = True
-
-if templateSelected == "random":
-    solarSystem = {
-        "planets": [
-            Planet(
-                "",
-                None,
-                solar_system,
-                randrange(200, 500),
-                ( # Extra logic to ensure the planets don't spawn too close to the sun
-                    randrange(int(-effectiveWidth / 2), minRadiusSun) if bool(random.getrandbits(1)) else randrange(minRadiusSun, int(effectiveWidth / 2)),
-                    randrange(int(-effectiveHeight / 2), minRadiusSun) if bool(random.getrandbits(1)) else randrange(minRadiusSun, int(effectiveHeight / 2))),
-                (randrange(-5, 5), randrange(-5, 5))
-            ) for i in range(randrange(3, 10))
-        ],
-        "suns": [
-            Sun("", solar_system, 10000, (0, 0), (0, 0)),
-        ]
-    }
-elif templateSelected == "default":
-        solarSystem = {
-            "planets": (
-                Planet("", None, solar_system, 500, (50, 0), (0, 11)),
-                Planet("", None, solar_system, 10, (-350, 0), (0, -10)),
-                Planet("", None, solar_system, 5, (0, 200), (-2, -7)),
-            ),
-            "suns": (
-                Sun("", solar_system, 10000, (-200, 0), (0, 3.5)),
-                Sun("", solar_system, 10000, (200, 0), (0, -3.5)),
-            )
-        }
 
 while startSimulation:
     solar_system.calculate_all_body_interactions()

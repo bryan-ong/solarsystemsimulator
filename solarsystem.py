@@ -93,6 +93,11 @@ class SolarSystem:
             body.draw()
         self.solar_system.update()
 
+    def draw_planets(self):
+        for body in self.bodies:
+            body.draw()
+        self.solar_system.update()
+
     @staticmethod
     def accelerate_due_to_gravity(
             first: SolarSystemBody,
@@ -114,6 +119,9 @@ class SolarSystem:
     def check_collision(self, first, second):
         if isinstance(first, Planet) and isinstance(second, Planet):
             return
+        if isinstance(first, Sun) and isinstance(second, Sun):
+            self.bodies.clear()
+
         if first.distance(second) < first.display_size / 2 + second.display_size / 2:
             for body in first, second:
                 if isinstance(body, Planet):
@@ -125,4 +133,3 @@ class SolarSystem:
             for second in bodies_copy[idx + 1:]:
                 self.accelerate_due_to_gravity(first, second)
                 self.check_collision(first, second)
-

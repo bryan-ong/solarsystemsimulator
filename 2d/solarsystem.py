@@ -121,7 +121,7 @@ class SolarSystem:
             return
         if isinstance(first, Sun) and isinstance(second, Sun):
             self.bodies.clear()
-
+            print("Game Over!")
         if first.distance(second) < first.display_size / 2 + second.display_size / 2:
             for body in first, second:
                 if isinstance(body, Planet):

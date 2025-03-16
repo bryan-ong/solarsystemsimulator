@@ -1,7 +1,6 @@
 import itertools
 import math
 import random
-from importlib.metadata.diagnose import inspect
 
 import matplotlib.pyplot as plt
 from vectors import Vector
@@ -20,9 +19,9 @@ class SolarSystem:
         )
         self.fig.tight_layout()
         if self.projection_2d:
-            self.ax.view_init(10, 0)
+            self.ax.view_init(90, 0)
         else:
-            self.ax.view_init(0, 0)
+            self.ax.view_init(90, 0)
 
     def check_collision(self, first, second):
         distance_vector = Vector(*first.position) - Vector(*second.position)

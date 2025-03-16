@@ -37,7 +37,7 @@ class SolarSystemBody(turtle.Turtle):
 
     def draw(self):
         self.clear()
-        self.dot(int(self.display_size))
+        # self.dot(int(self.display_size))
 
     def move(self):
         self.setx(self.xcor() + self.velocity[0])

@@ -2,21 +2,23 @@ import numpy as np
 from scipy.integrate import odeint
 import plotly.graph_objects as go
 
+
 # Constants
 G = 6.67428e-11  # Universal Gravitational Constant | N m^2 kg^-2
 
 # Number of bodies
-n = 4  # Change this to the desired number of bodies
+n = 5  # Change this to the desired number of bodies
 
 # Masses of the bodies (example values)
-masses = np.array([0.1e9, 0.6e8, 0.1e9, 0.2e9])[:n]  # kg
+masses = np.array([0.1e9, 0.6e8, 0.1e9, 0.2e9, 0.5e7])[:n]  # kg
 
 # Initial positions of the bodies
 positions = np.array([
     [0.1, 0, 0.4],
     [0.2, 0.1, 0],
     [-0.1, 0, -0.1],
-    [0, 0.2, 0.3]
+    [0, 0.2, 0.3],
+    [0.25, 0.74, 0.3]
 ])[:n]  # km
 
 # Initial velocities of the bodies
@@ -24,14 +26,15 @@ velocities = np.array([
     [0.02, -0.02, 0.08],
     [0.1, 0.1, -0.02],
     [-0.04, -0.175, -0.01],
-    [0.05, -0.1, 0.03]
+    [0.05, -0.1, 0.03],
+    [0.01, -0.2, -0.05]
 ])[:n]  # km/s
 
 # Flatten initial conditions for ODE solver
 init_params = np.concatenate([positions.flatten(), velocities.flatten()])
 
 # Time span for the simulation
-time_span = np.linspace(0, 200, 500)
+time_span = np.linspace(0, 200, 1000)
 
 
 # N-body ODE function
@@ -42,7 +45,7 @@ def n_body_system(init_params, t, G, masses):
     velocities = init_params[3 * n:].reshape(n, 3)
 
     # Compute derivatives kinematics stuff
-    # dr/dt = velocity and dv_dt is acceleration
+    # dr/dt  =  velocity and dv_dt is acceleration
     dr_dt = velocities
     dv_dt = np.zeros_like(velocities)
 
@@ -69,15 +72,30 @@ positions_sol = solution[:, :3 * n].reshape(-1, n, 3)
 # Create traces for each body
 traces = []
 for i in range(n):
-    trace = go.Scatter3d(
+    trace_line = go.Scatter3d(
         x=positions_sol[:, i, 0],
         y=positions_sol[:, i, 1],
         z=positions_sol[:, i, 2],
-        name=f'Body {i + 1}',
+        name=f'Body {i + 1} Trajectory',
         mode='lines',
-        line=dict(width=4)
+        line=dict(width=2, color=f'hsl({i * 120}, 100%, 50%)')
     )
-    traces.append(trace)
+    traces.append(trace_line)
+
+    trace_sphere = go.Scatter3d(
+        x=[positions_sol[-1, i, 0]],
+        y=[positions_sol[-1, i, 1]],
+        z=[positions_sol[-1, i, 2]],
+        name=f'Body {i + 1}',
+        mode='markers',
+        marker=dict(
+            size=10,
+            color=f'hsl({i * 120}, 100%, 50%)',
+            opacity=0.8,
+            symbol='circle'
+        )
+    )
+    traces.append(trace_sphere)
 
 frames = []
 for r in range(len(time_span)):
@@ -88,9 +106,38 @@ for r in range(len(time_span)):
             y=positions_sol[:r + 1, i, 1],
             z=positions_sol[:r + 1, i, 2],
             mode='lines',
-            line=dict(width=4)
+            line=dict(width=2, color=f'hsl({i * 120}, 100%, 50%)'),
         ))
-    frames.append(go.Frame(data=frame_data, name=f'frame{r}'))
+        frame_data.append(go.Scatter3d(
+            x=[positions_sol[r, i, 0]],
+            y=[positions_sol[r, i, 1]],
+            z=[positions_sol[r, i, 2]],
+            mode='markers',
+            marker=dict(
+                size=10,
+                color=f'hsl({i * 120}, 100%, 50%)',
+                opacity=0.8,
+                symbol='circle'
+            )
+        ))
+    frames.append(go.Frame(
+        data=frame_data,
+        name=f'frame{r}',
+        layout=dict(
+            annotations=[
+                dict(
+                    text=f'Time (Arbitrary): {time_span[r]:.1f}',
+                    x=0,
+                    y=0.5,
+                    xref='paper',
+                    yref='paper',
+                    font=dict(size=16, color='white'),
+                    showarrow=False
+                )
+            ]
+        )
+    ))
+
 
 # Layout for the plot
 layout = go.Layout(
@@ -108,13 +155,33 @@ layout = go.Layout(
                       buttons=[
                           dict(label='Play',
                                method='animate',
-                               args=[None, dict(frame=dict(duration=20, redraw=True), fromcurrent=True)]), # 20 ms per frame/ around 50 fps
+                               args=[None, dict(frame=dict(duration=(1000/60), redraw=True), fromcurrent=True)]),
+                          # 60FPS
                           dict(label='Pause',
                                method='animate',
-                               args=[[None], dict(mode="immediate")])
+                               args=[[None], dict(mode="immediate")]),
+                          dict(label='Next',
+                               method='animate',
+                               args=[None, dict(frame=dict(duration=0, redraw=True), fromcurrent=True,
+                                                transition=dict(duration=0))]),
+                          dict(label='Reset',
+                               method='animate',
+                               args=[None,
+                                     dict(frame=dict(duration=0, redraw=True), fromcurrent=False, mode='immediate',
+                                          transition=dict(duration=0))])
                       ])],
+    sliders=[dict(
+       active=0,
+        # steps=slider_steps,
+        currentvalue=dict(prefix='Time: ', font=dict(color='white')),
+        len = 0.9,
+        x=0.1,
+        y=0,
+        pad=dict(t=50, b=10)
+    )],
     font=dict(color="white"),
-    uirevision="constant"
+    # uirevision='constant',
+    # Seems that uirevision doesn't work for 3D scatter plots especially, this is meant to allow us to pan and zoom the camera while the animation is playing. Other people online also seem to have this issue
 )
 
 # Create the figure

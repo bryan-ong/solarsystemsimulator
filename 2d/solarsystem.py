@@ -65,7 +65,7 @@ class BlackHole(SolarSystemBody):
             velocity=(0, 0),
     ):
         super().__init__(name, solar_system, mass, position, velocity)
-        self.color("black")
+        self.color("black", "orange")
 
 class Planet(SolarSystemBody):
 
@@ -80,7 +80,7 @@ class Planet(SolarSystemBody):
     ):
         super().__init__(name, solar_system, mass, position, velocity)
         inputColor = randomize_color() if color is None else color
-        self.color(inputColor)
+        self.color(inputColor, "white")
 
 
 class SolarSystem:
@@ -88,7 +88,7 @@ class SolarSystem:
         self.solar_system = turtle.Screen()
         self.solar_system.tracer(0)
         self.solar_system.setup(width, height)
-        self.solar_system.bgpic("bg.jpg")
+        self.solar_system.bgpic("bg.png")
         # self.solar_system.bgcolor("white")
 
         self.bodies = []
@@ -134,9 +134,9 @@ class SolarSystem:
         if isinstance(first, Sun) and isinstance(second, Sun):
             self.bodies.remove(first)
             self.bodies.remove(second)
-            self.add_body(Sun(
-
-            ))
+            # self.add_body(BlackHole(
+            #     "Black Hole", self, first.mass + second.mass, first.position, ((first.velocity[0] + second.velocity[0]) / 2, (first.velocity[1] + second.velocity[1]) / 2)
+            # ))
             print("Game Over!")
         if first.distance(second) < first.display_size / 2 + second.display_size / 2:
             for body in first, second:

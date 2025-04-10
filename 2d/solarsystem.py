@@ -10,7 +10,7 @@ def randomize_color():
 
 class SolarSystemBody(turtle.Turtle):
     min_display_size = 20
-    display_log_base = 1.1
+    display_log_base = 1.2
 
     def __init__(
             self,
@@ -32,12 +32,11 @@ class SolarSystemBody(turtle.Turtle):
 
         self.penup()
         self.hideturtle()
-
         solar_system.add_body(self)
 
     def draw(self):
         self.clear()
-        # self.dot(int(self.display_size))
+        self.dot(int(self.display_size))
 
     def move(self):
         self.setx(self.xcor() + self.velocity[0])
@@ -56,6 +55,18 @@ class Sun(SolarSystemBody):
         super().__init__(name, solar_system, mass, position, velocity)
         self.color("yellow")
 
+class BlackHole(SolarSystemBody):
+    def __init__(
+            self,
+            name,
+            solar_system,
+            mass,
+            position=(0, 0),
+            velocity=(0, 0),
+    ):
+        super().__init__(name, solar_system, mass, position, velocity)
+        self.color("black")
+
 class Planet(SolarSystemBody):
 
     def __init__(
@@ -71,15 +82,16 @@ class Planet(SolarSystemBody):
         inputColor = randomize_color() if color is None else color
         self.color(inputColor)
 
+
 class SolarSystem:
     def __init__(self, width, height):
         self.solar_system = turtle.Screen()
         self.solar_system.tracer(0)
         self.solar_system.setup(width, height)
-        self.solar_system.bgcolor("black")
+        self.solar_system.bgpic("bg.jpg")
+        # self.solar_system.bgcolor("white")
 
         self.bodies = []
-
     def add_body(self, body):
         self.bodies.append(body)
 
@@ -120,7 +132,11 @@ class SolarSystem:
         if isinstance(first, Planet) and isinstance(second, Planet):
             return
         if isinstance(first, Sun) and isinstance(second, Sun):
-            self.bodies.clear()
+            self.bodies.remove(first)
+            self.bodies.remove(second)
+            self.add_body(Sun(
+
+            ))
             print("Game Over!")
         if first.distance(second) < first.display_size / 2 + second.display_size / 2:
             for body in first, second:

@@ -16,6 +16,7 @@ effectiveWidth = 1500 # Range where we spawn the planets
 effectiveHeight = 750 # Here as well
 minRadiusSun = 200 # Minimum distance from the Sun
 # All of these only apply to the random configuration
+mass_scale = 0.75
 
 error=None
 speederror=None
@@ -250,7 +251,7 @@ def setchoice(choice):
                     "",
                     None,
                     solar_system,
-                    randrange(200, 500),
+                    randrange(int(200 * mass_scale), int(500 * mass_scale)),
                     (  # Extra logic to ensure the planets don't spawn too close to the sun
                         randrange(int(-effectiveWidth / 2), minRadiusSun) if bool(random.getrandbits(1)) else randrange(
                             minRadiusSun, int(effectiveWidth / 2)),
@@ -260,7 +261,7 @@ def setchoice(choice):
                 ) for i in range(randrange(3, 10))
             ],
             "suns": [
-                Sun("", solar_system, 10000, (0, 0), (0, 0)),
+                Sun("", solar_system, 10000 * mass_scale, (0, 0), (0, 0)),
             ]
         }
         fstartSim(choice)
@@ -291,7 +292,7 @@ def fstartSim(choice):
             while True:
                 solar_system.calculate_all_body_interactions()
                 solar_system.update_all()
-                time.sleep(1 / simulationSpeed / 100 )
+                time.sleep(1 / int(simulationSpeed) / 100 )
 
     startSim=Button(framespeed,text="Start Simulation",command=startsimulation).grid(row=2)
     

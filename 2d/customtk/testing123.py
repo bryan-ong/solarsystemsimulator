@@ -1,3 +1,5 @@
+from turtle import Turtle
+from solarsystem import *
 from customtkinter import *
 from tkinter import *
 from PIL import Image
@@ -130,7 +132,7 @@ class Simulation(CTkFrame):
         random_btn = CTkButton(master=self, text="Randomize", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                                bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                                border_width=5, height=75, width=BUTTON_SIZE,
-                               command=lambda: master.show_page(master.custom))
+                               command=lambda: master.show_page(master.random))
 
         random_btn.place(relx=0.5, rely=0.7, anchor="center")
 
@@ -198,6 +200,11 @@ class Default(CTkFrame):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
 
+        bg_img = Image.open("assets/bg.jpg")
+        bg_lbl = CTkLabel(self, text="",
+                          image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+        bg_lbl.place(x=0, y=0)
+
         title = CTkButton(master=self, text="DEFAULT", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
                           bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG,
                           border_color=WISTERIA, border_width=5,
@@ -212,35 +219,32 @@ class Default(CTkFrame):
 
         back_btn.place(relx=0.1, rely=0.1, anchor="center")
 
-        label = CTkLabel(master=self,
-                         text="How fast would you like to run the simulation? Leave blank for default: 1: ",
-                         fg_color="transparent",
-                         font=("BRLNSDB", 24),
-                         text_color=CANDY_DREAMS)
+        label = CTkButton(master=self,
+                                text="""Generates a solar system using the default preset.
+How fast would you like to run the simulation? Leave blank for default: 1""",
+                                fg_color="transparent",
+                                bg_color=SWEET_FLAG,
+                                border_color=WISTERIA,
+                                hover_color=SWEET_FLAG,
+                                border_width=5,
+                                font=CTkFont(family='Inter', size=24),
+                                text_color=(CANDY_DREAMS, CANDY_DREAMS),
+                                )
 
-        label.place(relx=0.5,
-                    rely=0.4,
-                    anchor="center", )
-        name = CTkEntry(master=self,
-                        width=300)
-        name.place(relx=0.5,
-                   rely=0.5,
-                   anchor="center", )
+        label.place(relx=0.5, rely=0.5, anchor="center")
 
-        gobtn = CTkButton(master=self,
-                          text="Go",
-                          corner_radius=5,
-                          fg_color="white",
-                          hover_color="#427ef5",
-                          text_color="black",
-                          border_width=1,
-                          border_color="black",
-                          font=('Inter', 14, 'bold'),
-                          # command=lambda:master.show_page(master.simulation) (change command)
-                          )
-        gobtn.place(relx=0.5,
-                    rely=0.6,
-                    anchor="center", )
+        sim_speed = CTkEntry(master=self, font=("BRLNSDB", 64), text_color=CANDY_DREAMS,
+                             bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
+                             border_width=5, height=75, width=BUTTON_SIZE)
+
+        sim_speed.place(relx=0.5, rely=0.6, anchor="center")
+
+        start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                             bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                             border_width=5, height=75, width=BUTTON_SIZE,
+                             command=lambda: master.show_page(master.menu))
+
+        start_btn.place(relx=0.5, rely=0.7, anchor="center")
 
 
 class Custom(CTkFrame):
@@ -248,189 +252,194 @@ class Custom(CTkFrame):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
 
-        label = CTkLabel(master=self,
-                         text="Add Planet / Star",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=40),
-                         text_color=("black", "white"),
-                         )
-        label.place(relx=0.25,
-                    rely=0.15,
-                    anchor="center", )
+        bg_img = Image.open("assets/bg.jpg")
+        bg_lbl = CTkLabel(self, text="",
+                          image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+        bg_lbl.place(x=0, y=0)
 
-        label = CTkLabel(master=self,
-                         text="List",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=40),
-                         text_color=("black", "white"),
-                         )
-        label.place(relx=0.75,
-                    rely=0.15,
-                    anchor="center", )
+        label = CTkButton(master=self,
+                          text="Add Celestial Bodies", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                          bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                          border_width=5, height=75, width=BUTTON_SIZE * 3)
 
-        backbtn = CTkButton(master=self,
-                            text="Back to Options",
-                            corner_radius=5,
-                            fg_color="white",
-                            hover_color="#427ef5",
-                            text_color="black",
-                            border_width=1,
-                            border_color="black",
-                            font=('Inter', 14, 'bold'),
-                            command=lambda: master.show_page(master.simulation))
-        backbtn.place(relx=0.1,
-                      rely=0.1,
-                      anchor="center", )
+        label.place(relx=0.225, rely=0.2, anchor="center")
 
-        addplanetbtn = CTkButton(master=self,
-                                 text="Add as Planet",
-                                 corner_radius=5,
-                                 fg_color="white",
-                                 hover_color="#427ef5",
-                                 text_color="black",
-                                 border_width=1,
-                                 border_color="black",
-                                 font=('Inter', 14, 'bold'),
+        label = CTkButton(master=self,
+                         text="List of Bodies",
+                         font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=BUTTON_SIZE)
+
+        label.place(relx=0.75, rely=0.15, anchor="center")
+
+        list = CTkButton(master=self, text="", bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                          border_width=5, height=SCR_HEIGHT // 2, width=BUTTON_SIZE * 3)
+        list.place(relx=0.75, rely=0.6, anchor="center")
+
+        back_btn = CTkButton(master=self, text="Back to Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                             bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                             border_width=5, height=75, width=BUTTON_SIZE,
+                             command=lambda: master.show_page(master.simulation))
+
+        back_btn.place(relx=0.1, rely=0.1, anchor="center")
+
+        add_planet_btn = CTkButton(master=self,
+                                   text="Add as Planet", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                                   bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                                   border_width=5, height=75, width=BUTTON_SIZE,
+                                   # command=lambda:master.show_page(master.menu)
+                                   )
+
+        add_planet_btn.place(relx=0.2,
+                             rely=0.9,
+                             anchor="center")
+
+        add_star_btn = CTkButton(master=self,
+                                 text="Add as Star", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                                 bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                                 border_width=5, height=75, width=BUTTON_SIZE,
                                  # command=lambda:master.show_page(master.menu)
                                  )
-        addplanetbtn.place(relx=0.18,
+        add_star_btn.place(relx=0.33,
                            rely=0.9,
                            anchor="center", )
 
-        addstarbtn = CTkButton(master=self,
-                               text="Add as Star",
-                               corner_radius=5,
-                               fg_color="white",
-                               hover_color="#427ef5",
-                               text_color="black",
-                               border_width=1,
-                               border_color="black",
-                               font=('Inter', 14, 'bold'),
-                               # command=lambda:master.show_page(master.menu)
-                               )
-        addstarbtn.place(relx=0.33,
-                         rely=0.9,
-                         anchor="center", )
-
-        label = CTkLabel(master=self,
-                         text="Name: ",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=20),
-                         text_color=("white"),
+        label = CTkButton(master=self,
+                         text="Name: ", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=BUTTON_SIZE,
                          )
         label.place(relx=0.1,
                     rely=0.3,
                     anchor="center", )
-        name = CTkEntry(master=self,
-                        width=300)
+
+        name = CTkEntry(master=self, font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                             bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
+                             border_width=5, height=75, width=BUTTON_SIZE * 1.5)
+
         name.place(relx=0.3,
                    rely=0.3,
-                   anchor="center", )
+                   anchor="center")
 
-        label = CTkLabel(master=self,
-                         text="Mass: ",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=20),
-                         text_color=("white"),
+        label = CTkButton(master=self,
+                         text="Mass: ", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=BUTTON_SIZE,
                          )
         label.place(relx=0.1,
                     rely=0.4,
                     anchor="center", )
         varmass = IntVar()
         mass = CTkSlider(master=self,
+                         bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
                          from_=0, to=1000,
                          variable=varmass)
         mass.place(relx=0.3,
                    rely=0.4,
                    anchor="center", )
-        value = CTkLabel(self, textvariable=varmass)
+        value = CTkButton(self, textvariable=varmass, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=75)
         value.place(relx=0.43,
                     rely=0.4,
                     anchor="center", )
 
-        label = CTkLabel(master=self,
-                         text="x-Velocity: ",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=20),
-                         text_color=("white"),
+        label = CTkButton(master=self,
+                         text="Initial X-vel: ", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=BUTTON_SIZE,
                          )
         label.place(relx=0.1,
                     rely=0.5,
                     anchor="center", )
         varx_velo = IntVar()
         x_velo = CTkSlider(master=self,
+                           bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
                            from_=0, to=1000,
                            variable=varx_velo)
         x_velo.place(relx=0.3,
                      rely=0.5,
                      anchor="center", )
-        value = CTkLabel(self, textvariable=varx_velo)
+        value = CTkButton(self, textvariable=varx_velo, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=75)
         value.place(relx=0.43,
                     rely=0.5,
                     anchor="center", )
 
-        label = CTkLabel(master=self,
-                         text="y-Velocity: ",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=20),
-                         text_color=("white"),
-                         )
+        label = CTkButton(master=self,
+                         text="Initial Y-vel: ", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=BUTTON_SIZE)
+
         label.place(relx=0.1,
                     rely=0.6,
-                    anchor="center", )
+                    anchor="center")
+
         vary_velo = IntVar()
         y_velo = CTkSlider(master=self,
+                           bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
                            from_=0, to=1000,
                            variable=vary_velo)
         y_velo.place(relx=0.3,
                      rely=0.6,
                      anchor="center", )
-        value = CTkLabel(self, textvariable=vary_velo)
+        value = CTkButton(self, textvariable=vary_velo, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=75)
         value.place(relx=0.43,
                     rely=0.6,
                     anchor="center", )
 
-        label = CTkLabel(master=self,
-                         text="x-Position: ",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=20),
-                         text_color=("white"),
-                         )
+        label = CTkButton(master=self,
+                         text="Initial X-pos: ", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=BUTTON_SIZE)
+
         label.place(relx=0.1,
                     rely=0.7,
                     anchor="center", )
+
         varx_pos = IntVar()
         x_pos = CTkSlider(master=self,
+                          bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
                           from_=0, to=1000,
                           variable=varx_pos)
         x_pos.place(relx=0.3,
                     rely=0.7,
                     anchor="center", )
-        value = CTkLabel(self, textvariable=varx_pos)
+        value = CTkButton(self, textvariable=varx_pos, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=75)
         value.place(relx=0.43,
                     rely=0.7,
                     anchor="center", )
 
-        label = CTkLabel(master=self,
-                         text="y-Position: ",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=20),
-                         text_color=("white"),
-                         )
+        label = CTkButton(master=self,
+                          text="Initial Y-pos: ", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                          bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                          border_width=5, height=75, width=BUTTON_SIZE,
+                          )
         label.place(relx=0.1,
                     rely=0.8,
                     anchor="center", )
         vary_pos = IntVar()
         y_pos = CTkSlider(master=self,
+                          bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1,
+                          button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
                           from_=0, to=1000,
                           variable=vary_pos)
         y_pos.place(relx=0.3,
                     rely=0.8,
                     anchor="center", )
-        value = CTkLabel(self, textvariable=vary_pos)
+        value = CTkButton(self, textvariable=vary_pos, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
+                         bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                         border_width=5, height=75, width=75)
         value.place(relx=0.43,
                     rely=0.8,
-                    anchor="center", )
+                    anchor="center")
+
+
 
     #     '''if not(solarSystem==[]):
     #         for astroObject in solarSystem:
@@ -463,59 +472,70 @@ class Random(CTkFrame):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
 
-        label = CTkLabel(master=self,
-                         text="Random",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=50),
-                         text_color=("black", "white"),
-                         )
-        label.place(relx=0.5,
-                    rely=0.3,
-                    anchor="center", )
+        bg_img = Image.open("assets/bg.jpg")
+        bg_lbl = CTkLabel(self, text="",
+                          image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+        bg_lbl.place(x=0, y=0)
 
-        backbtn = CTkButton(master=self,
-                            text="Back to Options",
-                            corner_radius=5,
-                            fg_color="white",
-                            hover_color="#427ef5",
-                            text_color="black",
-                            border_width=1,
-                            border_color="black",
-                            font=('Inter', 14, 'bold'),
-                            command=lambda: master.show_page(master.simulation))
-        backbtn.place(relx=0.1,
-                      rely=0.1,
-                      anchor="center", )
+        title = CTkButton(master=self, text="DEFAULT", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
+                          bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG,
+                          border_color=WISTERIA, border_width=5,
+                          width=SCR_WIDTH + 100, height=SCR_HEIGHT / 8)
 
-        label = CTkLabel(master=self,
-                         text="How fast would you like to run the simulation? Default: 1: ",
-                         fg_color="transparent",
-                         font=CTkFont(family='Inter', size=20),
-                         text_color=("white"),
-                         )
-        label.place(relx=0.5,
-                    rely=0.4,
-                    anchor="center", )
-        name = CTkEntry(master=self,
-                        width=300)
-        name.place(relx=0.5,
-                   rely=0.5,
-                   anchor="center", )
+        title.place(relx=0.5, rely=0.3, anchor="center")
 
-        gobtn = CTkButton(master=self,
-                          text="Go",
-                          corner_radius=5,
-                          fg_color="white",
-                          hover_color="#427ef5",
-                          text_color="black",
-                          border_width=1,
-                          border_color="black",
-                          font=('Inter', 14, 'bold'),
-                          # command=lambda:master.show_page(master.simulation) (change command)
+        back_btn = CTkButton(master=self, text="Back to Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                             bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                             border_width=5, height=75, width=BUTTON_SIZE,
+                             command=lambda: master.show_page(master.simulation))
+
+        back_btn.place(relx=0.1, rely=0.1, anchor="center")
+
+        label = CTkButton(master=self,
+                          text="""Generates a solar system using randomized values.
+    How fast would you like to run the simulation? Leave blank for default: 1""",
+                          fg_color="transparent",
+                          bg_color=SWEET_FLAG,
+                          border_color=WISTERIA,
+                          hover_color=SWEET_FLAG,
+                          border_width=5,
+                          font=CTkFont(family='Inter', size=24),
+                          text_color=(CANDY_DREAMS, CANDY_DREAMS),
                           )
-        gobtn.place(relx=0.5,
-                    rely=0.6,
-                    anchor="center", )
+
+        label.place(relx=0.5, rely=0.5, anchor="center")
+
+        sim_speed = CTkEntry(master=self, font=("BRLNSDB", 64), text_color=CANDY_DREAMS,
+                             bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
+                             border_width=5, height=75, width=BUTTON_SIZE)
+
+        sim_speed.place(relx=0.5, rely=0.6, anchor="center")
+
+        start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                              border_width=5, height=75, width=BUTTON_SIZE,
+                              command=lambda: master.show_page(master.menu))
+
+        start_btn.place(relx=0.5, rely=0.7, anchor="center")
+
+
+class MainSimulation(Turtle):
+    def __init__(self):
+        super().__init__()
+        self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
+
+    def create_default_system(self):
+        solarSystem = {
+            "planets": (
+                Planet("", None, self, 500, (50, 0), (0, 11)),
+                Planet("", None, self, 10, (-350, 0), (0, -10)),
+                Planet("", None, self, 5, (0, 200), (-2, -7)),
+            ),
+            "suns": (
+                Sun("", self, 10000, (-200, 0), (0, 3)),
+                Sun("", self, 10000, (200, 0), (0, -4)),
+            )
+        }
 
 
 if __name__ == "__main__":

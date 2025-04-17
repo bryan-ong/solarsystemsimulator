@@ -7,6 +7,8 @@ WISTERIA = "#ab81cd"
 CANDY_DREAMS = "#e2adf2"
 POMPELMO = "#ff6464"
 TRANSPARENT = "#ffff15"
+PURPLE = "#8b48d9"
+LILAC = "#e6d7ff"
 
 SCR_WIDTH = GetSystemMetrics(0)
 SCR_HEIGHT = GetSystemMetrics(1)

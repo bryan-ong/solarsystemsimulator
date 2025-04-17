@@ -16,6 +16,7 @@ effectiveWidth = 1500 # Range where we spawn the planets
 effectiveHeight = 750 # Here as well
 minRadiusSun = 200 # Minimum distance from the Sun
 # All of these only apply to the random configuration
+startsimbtn=0
 
 error=None
 speederror=None
@@ -127,7 +128,7 @@ def setchoice(choice):
     """)
                     list.pack()'''
 
-        def faddstar():
+        def faddstar(startSim=None):
             validity=False
             global error
             try:
@@ -179,10 +180,16 @@ def setchoice(choice):
     =================================================
     """)
                     list.pack()
-            startSim=Button(frame2,text="Start Simulation",command=lambda:fstartSim(choice))
-            startSim.pack()
+            # if not(startSim.winfo_exists()):
+            # startSim=Button(frame2,text="Start Simulation",command=lambda:fstartSim(choice))
+            # startSim.pack()
+            global startsimbtn
+            if startsimbtn==0:
+                startSim=Button(frame2,text="Start Simulation",command=lambda:fstartSim(choice))
+                startSim.pack()
+                startsimbtn+=1
 
-        def faddplanet():
+        def faddplanet(startSim=None):
             validity=False
             global error
             try:
@@ -235,12 +242,18 @@ def setchoice(choice):
     =================================================
     """)
                     list.pack()
-            startSim=Button(frame2,text="Start Simulation",command=lambda:fstartSim(choice))
-            startSim.pack()
+
+            # if not(startSim.winfo_exists()):
+            # startSim=Button(frame2,text="Start Simulation",command=lambda:fstartSim(choice))
+            # startSim.pack()
+            global startsimbtn
+            if startsimbtn==0:
+                startSim=Button(frame2,text="Start Simulation",command=lambda:fstartSim(choice))
+                startSim.pack()
+                startsimbtn+=1
 
         addstar=Button(frame1,text="Add as star",command=faddstar).grid(sticky=N+S+E+W)
         addplanet=Button(frame1,text="Add as Planet",command=faddplanet).grid(sticky=N+S+E+W)
-
 
     elif choice == 3:
         choiceSelected = True

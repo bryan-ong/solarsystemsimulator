@@ -274,7 +274,18 @@ class Custom(CTkFrame):
 
         list = CTkButton(master=self, text="", bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
                           border_width=5, height=SCR_HEIGHT // 2, width=BUTTON_SIZE * 3)
-        list.place(relx=0.75, rely=0.6, anchor="center")
+        list.place(relx=0.75, rely=0.5, anchor="center")
+
+        start_btn = CTkButton(master=self,
+                                   text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                                   bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                                   border_width=5, height=75, width=BUTTON_SIZE,
+                                   # command=lambda:master.show_page(master.menu)
+                                   )
+
+        start_btn.place(relx=0.75,
+                             rely=0.9,
+                             anchor="center")
 
         back_btn = CTkButton(master=self, text="Back to Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,

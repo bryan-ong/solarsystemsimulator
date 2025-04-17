@@ -16,7 +16,6 @@ effectiveWidth = 1500 # Range where we spawn the planets
 effectiveHeight = 750 # Here as well
 minRadiusSun = 200 # Minimum distance from the Sun
 # All of these only apply to the random configuration
-mass_scale = 0.75
 
 error=None
 speederror=None
@@ -43,12 +42,12 @@ def get_color_input():
 
 def setchoice(choice):
     global startSimulation
-    global choiceSelected 
-    global solarSystem 
-    global simulationSpeed 
+    global choiceSelected
+    global solarSystem
+    global simulationSpeed
     global effectiveWidth
     global effectiveHeight
-    global minRadiusSun 
+    global minRadiusSun
     #existerror=False
     if choice == 1:
         solarSystem = {
@@ -69,7 +68,7 @@ def setchoice(choice):
         templateSelected = "custom"
 
         #while True:
-            #print("Current Star System:")
+        #print("Current Star System:")
         back=Button(main_window,text="Back",command=start)
         back.pack()
         frame1=Frame(main_window,height=300,width=150,)
@@ -83,37 +82,37 @@ def setchoice(choice):
         if not(solarSystem==[]):
             startSim=Button(frame2,text="Start Simulation",command=lambda:fstartSim(choice))
             startSim.pack()
-        
+
         entername=Label(frame1,text="Name: ").grid(row=0,sticky=W)
-        entername.pack(side=LEFT)
+        #entername.pack(side=LEFT)
         namespace=Entry(frame1,bd=5)
         namespace.grid(row=0,column=1)
-        namespace.pack(side=RIGHT)
+        #namespace.pack(side=RIGHT)
         entermass=Label(frame1,text="Mass: ").grid(row=1,sticky=W)
-        entermass.pack(side=LEFT)
+        #entermass.pack(side=LEFT)
         massspace=Entry(frame1,bd=5)
         massspace.grid(row=1,column=1)
-        massspace.pack(side=RIGHT)
+        #massspace.pack(side=RIGHT)
         enterxpos=Label(frame1,text="X position: ").grid(row=2,sticky=W)
-        enterxpos.pack(side=LEFT)
+        #enterxpos.pack(side=LEFT)
         xposspace=Entry(frame1,bd=5)
         xposspace.grid(row=2,column=1)
-        xposspace.pack(side=RIGHT)
+        #xposspace.pack(side=RIGHT)
         enterypos=Label(frame1,text="Y position: ").grid(row=3,sticky=W)
-        enterypos.pack(side=LEFT)
+        #enterypos.pack(side=LEFT)
         yposspace=Entry(frame1,bd=5)
         yposspace.grid(row=3,column=1)
-        yposspace.pack(side=RIGHT)
+        #yposspace.pack(side=RIGHT)
         enterxvel=Label(frame1,text="X velocity: ").grid(row=4,sticky=W)
-        enterxvel.pack(side=LEFT)
+        #enterxvel.pack(side=LEFT)
         xvelspace=Entry(frame1,bd=5)
         xvelspace.grid(row=4,column=1)
-        xvelspace.pack(side=RIGHT)
+        #xvelspace.pack(side=RIGHT)
         enteryvel=Label(frame1,text="Y velocity: ").grid(row=5,sticky=W)
-        enteryvel.pack(side=LEFT)
+        #enteryvel.pack(side=LEFT)
         yvelspace=Entry(frame1,bd=5)
         yvelspace.grid(row=5,column=1)
-        yvelspace.pack(side=RIGHT)
+        #yvelspace.pack(side=RIGHT)
 
         '''if not(solarSystem==[]):
             for astroObject in solarSystem:
@@ -131,7 +130,7 @@ def setchoice(choice):
         def faddstar():
             validity=False
             global error
-            try: 
+            try:
                 nameIn = str(namespace.get())
                 massIn = float(massspace.get())
                 xIn = float(xposspace.get())
@@ -139,7 +138,7 @@ def setchoice(choice):
                 xVelIn = float(xvelspace.get())
                 yVelIn = float(yvelspace.get())
                 validity=True
-                
+
                 for astroObject in solarSystem:
                     if (xIn==astroObject.xcor() and yIn==astroObject.ycor()):
                         if error is not None:
@@ -147,7 +146,7 @@ def setchoice(choice):
                         error=Label(frame1,text="Position the same as other astroObjects.")
                         error.grid(row=8)
                         validity=False
-            
+
                 if (massIn<=0):
                     if error is not None:
                         error.destroy()
@@ -161,9 +160,9 @@ def setchoice(choice):
                 error=Label(frame1,text="Invalid input.")
                 error.grid(row=8)
                 existerror=True
-                validity=False 
+                validity=False
 
-            if (validity): 
+            if (validity):
                 if error is not None:
                     error.destroy()
                 solarSystem.append(Sun(nameIn, solar_system, massIn, (xIn, yIn), (xVelIn, yVelIn)))
@@ -186,7 +185,7 @@ def setchoice(choice):
         def faddplanet():
             validity=False
             global error
-            try: 
+            try:
                 nameIn = str(namespace.get())
                 massIn = float(massspace.get())
                 xIn = float(xposspace.get())
@@ -194,7 +193,7 @@ def setchoice(choice):
                 xVelIn = float(xvelspace.get())
                 yVelIn = float(yvelspace.get())
                 validity=True
-                
+
                 for astroObject in solarSystem:
                     if (xIn==astroObject.xcor() and yIn==astroObject.ycor()):
                         if error is not None:
@@ -202,7 +201,7 @@ def setchoice(choice):
                         error=Label(frame1,text="Position the same as other astroObjects.")
                         error.grid(row=8)
                         validity=False
-            
+
                 if (massIn<=0):
                     if error is not None:
                         error.destroy()
@@ -216,7 +215,7 @@ def setchoice(choice):
                 error=Label(frame1,text="Invalid input.")
                 error.grid(row=8)
                 existerror=True
-                validity=False 
+                validity=False
 
             if (validity):
                 if error is not None:
@@ -241,7 +240,7 @@ def setchoice(choice):
 
         addstar=Button(frame1,text="Add as star",command=faddstar).grid(sticky=N+S+E+W)
         addplanet=Button(frame1,text="Add as Planet",command=faddplanet).grid(sticky=N+S+E+W)
-        
+
 
     elif choice == 3:
         choiceSelected = True
@@ -251,7 +250,7 @@ def setchoice(choice):
                     "",
                     None,
                     solar_system,
-                    randrange(int(200 * mass_scale), int(500 * mass_scale)),
+                    randrange(200, 500),
                     (  # Extra logic to ensure the planets don't spawn too close to the sun
                         randrange(int(-effectiveWidth / 2), minRadiusSun) if bool(random.getrandbits(1)) else randrange(
                             minRadiusSun, int(effectiveWidth / 2)),
@@ -261,7 +260,7 @@ def setchoice(choice):
                 ) for i in range(randrange(3, 10))
             ],
             "suns": [
-                Sun("", solar_system, 10000 * mass_scale, (0, 0), (0, 0)),
+                Sun("", solar_system, 10000, (0, 0), (0, 0)),
             ]
         }
         fstartSim(choice)
@@ -292,14 +291,14 @@ def fstartSim(choice):
             while True:
                 solar_system.calculate_all_body_interactions()
                 solar_system.update_all()
-                time.sleep(1 / int(simulationSpeed) / 100 )
+                time.sleep(1 / simulationSpeed / 100 )
 
     startSim=Button(framespeed,text="Start Simulation",command=startsimulation).grid(row=2)
-    
+
     def goback(choice):
         if (choice==1 or choice==3):
             start()
-        else: 
+        else:
             setchoice(choice)
 
     back=Button(main_window,text="Back",command=lambda:goback(choice))

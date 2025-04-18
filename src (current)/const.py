@@ -1,3 +1,4 @@
+
 from win32api import GetSystemMetrics
 
 MAJORELLE_BLUE = "#574ae2"

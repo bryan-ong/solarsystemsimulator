@@ -1,9 +1,9 @@
 from turtle import Turtle
-from solarsystem import *
 from customtkinter import *
 from tkinter import *
 from PIL import Image
 from const import *
+from solarsystem import *
 
 # from solarsystem import SolarSystem, Sun, Planet
 
@@ -70,7 +70,7 @@ class Menu(CTkFrame):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("assets/bg.jpg")
+        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
 
@@ -102,7 +102,7 @@ class Simulation(CTkFrame):
     def __init__(self, master):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
-        bg_img = Image.open("assets/bg.jpg")
+        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
@@ -148,7 +148,7 @@ class Theory(CTkFrame):
     def __init__(self, master):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
-        bg_img = Image.open("assets/bg.jpg")
+        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
@@ -189,7 +189,7 @@ In the end, the object with a much lower mass might disappear while the object w
 
         back_btn.place(relx=0.1, rely=0.1, anchor="center")
 
-        explanation_img = Image.open("assets/explanation.png")
+        explanation_img = Image.open("../assets/explanation.png")
         explanation_lbl = CTkButton(self, text="", bg_color=WISTERIA, hover_color=WISTERIA, fg_color="transparent", border_color=CANDY_DREAMS,
                                     border_width= 5, width=420, height=270, corner_radius=5,
                                     image=CTkImage(light_image=explanation_img, dark_image=explanation_img, size=(400, 250)))
@@ -200,7 +200,7 @@ class Default(CTkFrame):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("assets/bg.jpg")
+        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
@@ -252,7 +252,7 @@ class Custom(CTkFrame):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("assets/bg.jpg")
+        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
@@ -483,7 +483,7 @@ class Random(CTkFrame):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("assets/bg.jpg")
+        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)

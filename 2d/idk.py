@@ -295,9 +295,9 @@ def fstartSim(choice):
         global speederror
         if speederror is not None:
             speederror.destroy()
-        simulationSpeed=SimulationSpeed.get()
+        simulationSpeed=1 if SimulationSpeed.get() == "" else SimulationSpeed.get()
         simulationSpeed=float(simulationSpeed)
-        if (simulationSpeed<=0):
+        if simulationSpeed<=0:
             speederror=Label(framespeed, text="Speed less than or equal to 0.")
             speederror.grid(row=3)
         else :
@@ -306,7 +306,7 @@ def fstartSim(choice):
                 solar_system.update_all()
                 time.sleep(1 / simulationSpeed / 100 )
 
-    startSim=Button(framespeed,text="Start Simulation",command=startsimulation).grid(row=2)
+    Button(framespeed, text="Start Simulation", command=startsimulation).grid(row=2)
 
     def goback(choice):
         if (choice==1 or choice==3):

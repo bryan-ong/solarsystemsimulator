@@ -79,7 +79,7 @@ class Menu(CTkFrame):
                           border_color=WISTERIA, border_width=5,
                           width=SCR_WIDTH + 100, height=SCR_HEIGHT / 8)
 
-        label.place(relx=0.5, rely=0.3, anchor="center", )
+        label.place(relx=0.5, rely=0.3, anchor="center")
 
         sim_btn = CTkButton(master=self, text="Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                             bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,

@@ -88,7 +88,7 @@ class SolarSystem:
         self.solar_system = turtle.Screen()
         self.solar_system.tracer(0)
         self.solar_system.setup(width, height)
-        self.solar_system.bgpic("bg.png")
+        self.solar_system.bgpic("../assets/bg.png")
         # self.solar_system.bgcolor("white")
 
         self.bodies = []

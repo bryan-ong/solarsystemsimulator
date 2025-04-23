@@ -4,45 +4,47 @@ from tkinter import *
 from PIL import Image
 from const import *
 from solarsystem import *
+import time
+from random import *
 
-# from solarsystem import SolarSystem, Sun, Planet
+from solarsystem import SolarSystem, Sun, Planet
 
 set_appearance_mode("dark")
 set_default_color_theme("dark-blue")
 
 
 # solar_system = SolarSystem(width = 1800, height = 800) # Set window dimensions, will change in future when implementing gui
-# startSimulation = False
-# choiceSelected = True
-# solarSystem = []
-# simulationSpeed = 0.01 # Simulation speed of 0.01 is equal to 1x speed (arbitrary units)
-# effectiveWidth = 1500 # Range where we spawn the planets
-# effectiveHeight = 750 # Here as well
-# minRadiusSun = BUTTON_SIZE # Minimum distance from the Sun
-# # All of these only apply to the random configuration
-# mass_scale = 0.75
+startSimulation = False
+choiceSelected = True
+solarSystem = []
+simulationSpeed = 0.01 # Simulation speed of 0.01 is equal to 1x speed (arbitrary units)
+effectiveWidth = 1500 # Range where we spawn the planets
+effectiveHeight = 750 # Here as well
+minRadiusSun = BUTTON_SIZE # Minimum distance from the Sun
+# All of these only apply to the random configuration
+mass_scale = 0.75
 
-# error=None
-# speederror=None
+error=None
+speederror=None
 
-# def get_float(prompt):
-#     while True:
-#         try:
-#             return float(input(prompt))
-#         except ValueError:
-#             print("Please enter a valid number.")
+def get_float(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Please enter a valid number.")
 
-# def get_color_input():
-#     color_input = input("Enter color (leave blank for random color) [r g b] 0-255: ") # Input should be 3 numbers with no spaces
-#     if color_input.strip() == "": # We return none if blank
-#         return None
-#     else:
-#         try:
-#             r, g, b = map(float, color_input.split())
-#             return r / 255, g / 255, b / 255  # Normalize to 1.0F as that's what turtle.color() uses
-#         except (ValueError, TypeError):
-#             print("Invalid color input. Please enter three numbers for RGB.")
-#             return get_color_input()
+def get_color_input():
+    color_input = input("Enter color (leave blank for random color) [r g b] 0-255: ") # Input should be 3 numbers with no spaces
+    if color_input.strip() == "": # We return none if blank
+        return None
+    else:
+        try:
+            r, g, b = map(float, color_input.split())
+            return r / 255, g / 255, b / 255  # Normalize to 1.0F as that's what turtle.color() uses
+        except (ValueError, TypeError):
+            print("Invalid color input. Please enter three numbers for RGB.")
+            return get_color_input()
 
 class App(CTk):
     def __init__(self):
@@ -239,10 +241,29 @@ How fast would you like to run the simulation? Leave blank for default: 1""",
 
         sim_speed.place(relx=0.5, rely=0.6, anchor="center")
 
+        def finalstartsim():
+            solar_system = SolarSystem(width = 1800, height = 800) # Set window dimensions, will change in future when implementing gui
+
+            global simulationSpeed
+            global speederror
+            if speederror is not None:
+                speederror.destroy()
+            simulationSpeed=sim_speed.get()
+            simulationSpeed=float(simulationSpeed)
+            if (simulationSpeed<=0):
+                speederror=Label(master=self, text="Speed less than or equal to 0.")
+                speederror.grid(row=3)
+            else :
+                while True:
+                    # print("pikachu")
+                    solar_system.calculate_all_body_interactions()
+                    solar_system.update_all()
+                    time.sleep(1 / simulationSpeed / 100 )
+
         start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                              border_width=5, height=75, width=BUTTON_SIZE,
-                             command=lambda: master.show_page(master.menu))
+                             command=finalstartsim)
 
         start_btn.place(relx=0.5, rely=0.7, anchor="center")
 
@@ -479,6 +500,25 @@ class Custom(CTkFrame):
 
 
 class Random(CTkFrame):
+    solarSystem = {
+        "planets": [
+            Planet(
+                "",
+                None,
+                solarSystem,
+                randrange(200, 500),
+                (  # Extra logic to ensure the planets don't spawn too close to the sun
+                    randrange(int(-effectiveWidth / 2), minRadiusSun) if bool(random.getrandbits(1)) else randrange(
+                        minRadiusSun, int(effectiveWidth / 2)),
+                    randrange(int(-effectiveHeight / 2), minRadiusSun) if bool(
+                        random.getrandbits(1)) else randrange(minRadiusSun, int(effectiveHeight / 2))),
+                (randrange(-5, 5), randrange(-5, 5))
+            ) for i in range(randrange(3, 10))
+        ],
+        "suns": [
+            Sun("", solar_system, 10000, (0, 0), (0, 0)),
+        ]
+    }
     def __init__(self, master):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)
@@ -522,10 +562,29 @@ class Random(CTkFrame):
 
         sim_speed.place(relx=0.5, rely=0.6, anchor="center")
 
+        def finalstartsim():
+            solar_system = SolarSystem(width = 1800, height = 800) # Set window dimensions, will change in future when implementing gui
+
+            global simulationSpeed
+            global speederror
+            if speederror is not None:
+                speederror.destroy()
+            simulationSpeed=sim_speed.get()
+            simulationSpeed=float(simulationSpeed)
+            if (simulationSpeed<=0):
+                speederror=Label(master=self, text="Speed less than or equal to 0.")
+                speederror.grid(row=3)
+            else :
+                while True:
+                    # print("pikachu")
+                    solar_system.calculate_all_body_interactions()
+                    solar_system.update_all()
+                    time.sleep(1 / simulationSpeed / 100 )
+
         start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                               bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                               border_width=5, height=75, width=BUTTON_SIZE,
-                              command=lambda: master.show_page(master.menu))
+                              command=finalstartsim)
 
         start_btn.place(relx=0.5, rely=0.7, anchor="center")
 
@@ -536,6 +595,7 @@ class MainSimulation(Turtle):
         self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
 
     def create_default_system(self):
+        global solarSystem
         solarSystem = {
             "planets": (
                 Planet("", None, self, 500, (50, 0), (0, 11)),

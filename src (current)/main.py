@@ -500,25 +500,25 @@ class Custom(CTkFrame):
 
 
 class Random(CTkFrame):
-    solarSystem = {
-        "planets": [
-            Planet(
-                "",
-                None,
-                solarSystem,
-                randrange(200, 500),
-                (  # Extra logic to ensure the planets don't spawn too close to the sun
-                    randrange(int(-effectiveWidth / 2), minRadiusSun) if bool(random.getrandbits(1)) else randrange(
-                        minRadiusSun, int(effectiveWidth / 2)),
-                    randrange(int(-effectiveHeight / 2), minRadiusSun) if bool(
-                        random.getrandbits(1)) else randrange(minRadiusSun, int(effectiveHeight / 2))),
-                (randrange(-5, 5), randrange(-5, 5))
-            ) for i in range(randrange(3, 10))
-        ],
-        "suns": [
-            Sun("", solar_system, 10000, (0, 0), (0, 0)),
-        ]
-    }
+    # solarSystem = {
+    #     "planets": [
+    #         Planet(
+    #             "",
+    #             None,
+    #             solarSystem,
+    #             randrange(200, 500),
+    #             (  # Extra logic to ensure the planets don't spawn too close to the sun
+    #                 randrange(int(-effectiveWidth / 2), minRadiusSun) if bool(random.getrandbits(1)) else randrange(
+    #                     minRadiusSun, int(effectiveWidth / 2)),
+    #                 randrange(int(-effectiveHeight / 2), minRadiusSun) if bool(
+    #                     random.getrandbits(1)) else randrange(minRadiusSun, int(effectiveHeight / 2))),
+    #             (randrange(-5, 5), randrange(-5, 5))
+    #         ) for i in range(randrange(3, 10))
+    #     ],
+    #     "suns": [
+    #         Sun("", solar_system, 10000, (0, 0), (0, 0)),
+    #     ]
+    # }
     def __init__(self, master):
         super().__init__(master)
         self.place(relwidth=1, relheight=1)

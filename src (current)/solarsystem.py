@@ -88,8 +88,8 @@ class SolarSystem:
         self.solar_system = turtle.Screen()
         self.solar_system.tracer(0)
         self.solar_system.setup(width, height)
-        self.solar_system.bgpic("../assets/bg.png")
-        # self.solar_system.bgcolor("white")
+        # self.solar_system.bgpic("bg.png")
+        self.solar_system.bgcolor("black")
 
         self.bodies = []
     def add_body(self, body):
@@ -131,15 +131,14 @@ class SolarSystem:
     def check_collision(self, first, second):
         if isinstance(first, Planet) and isinstance(second, Planet):
             return
-        if isinstance(first, Sun) and isinstance(second, Sun):
-            self.bodies.remove(first)
-            self.bodies.remove(second)
-            # self.add_body(BlackHole(
-            #     "Black Hole", self, first.mass + second.mass, first.position, ((first.velocity[0] + second.velocity[0]) / 2, (first.velocity[1] + second.velocity[1]) / 2)
-            # ))
-            print("Game Over!")
+
         if first.distance(second) < first.display_size / 2 + second.display_size / 2:
-            for body in first, second:
+            if isinstance(first, Sun) and isinstance(second, Sun):
+                for body in self.bodies[:]:
+                    self.remove_body(body)
+                return
+
+            for body in (first, second):
                 if isinstance(body, Planet):
                     self.remove_body(body)
 

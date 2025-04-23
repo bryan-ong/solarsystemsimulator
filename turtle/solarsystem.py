@@ -86,10 +86,11 @@ class Planet(SolarSystemBody):
 class SolarSystem:
     def __init__(self, width, height):
         self.solar_system = turtle.Screen()
+        self.solar_system._root.state('zoomed')
         self.solar_system.tracer(0)
         self.solar_system.setup(width, height)
-        self.solar_system.bgpic("bg.png")
-        # self.solar_system.bgcolor("white")
+        # self.solar_system.bgpic("bg.png")
+        self.solar_system.bgcolor("black")
 
         self.bodies = []
     def add_body(self, body):

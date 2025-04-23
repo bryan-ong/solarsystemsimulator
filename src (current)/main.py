@@ -1,4 +1,6 @@
+import threading
 from turtle import Turtle
+import time
 from customtkinter import *
 from tkinter import *
 from PIL import Image
@@ -49,25 +51,34 @@ class App(CTk):
         super().__init__()
         self.title("Gravision")
         self.geometry(str(SCR_WIDTH) + "x" + str(SCR_HEIGHT))
-        self.menu = Menu(self)
-        self.simulation = Simulation(self)
-        self.theory = Theory(self)
-        self.default = Default(self)
-        self.custom = Custom(self)
-        self.random = Random(self)
 
-        self.show_page(self.menu)
+        self.container = CTkFrame(self)
+        self.container.pack(side="top", fill="both", expand=True)
+        self.container.grid_rowconfigure(0, weight=1)
+        self.container.grid_columnconfigure(0, weight=1)
 
-    def show_page(self, page):
-        page.tkraise()
+        self.frames = {}
+        for F in (Menu, Simulation, Theory, Default, Custom, Random):
+            frame = F(parent=self.container, controller=self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_page(Menu)
+
+    def show_page(self, page_class):
+        frame = self.frames[page_class]
+        frame.tkraise()
 
     def close_windows(self):
         self.destroy()
 
 
+
 class Menu(CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+        self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
 
         bg_img = Image.open("../assets/bg.jpg")
@@ -84,14 +95,14 @@ class Menu(CTkFrame):
         sim_btn = CTkButton(master=self, text="Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                             bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                             border_width=5, height=75, width=BUTTON_SIZE,
-                            command=lambda: master.show_page(master.simulation))
+                            command=lambda: controller.show_page(Simulation))
         theory_btn = CTkButton(master=self, text="Theory", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                                bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                                border_width=5, height=75, width=BUTTON_SIZE,
-                               command=lambda: master.show_page(master.theory))
+                               command=lambda: controller.show_page(Theory))
         exit_btn = CTkButton(master=self, text="Exit", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
-                             border_width=5, height=75, width=BUTTON_SIZE, command=lambda: master.close_windows())
+                             border_width=5, height=75, width=BUTTON_SIZE, command=lambda: controller.close_windows())
 
         sim_btn.place(relx=0.5, rely=0.5, anchor="center")
         theory_btn.place(relx=0.5, rely=0.6, anchor="center")
@@ -99,9 +110,12 @@ class Menu(CTkFrame):
 
 
 class Simulation(CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+        self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
+
         bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
@@ -118,36 +132,39 @@ class Simulation(CTkFrame):
                                 bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA,
                                 border_color=WISTERIA,
                                 border_width=5, height=75, width=BUTTON_SIZE,
-                                command=lambda: master.show_page(master.default))
+                                command=lambda: controller.show_page(Default))
 
         default_btn.place(relx=0.5, rely=0.5, anchor="center")
 
         custom_btn = CTkButton(master=self, text="Custom", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                                bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                                border_width=5, height=75, width=BUTTON_SIZE,
-                               command=lambda: master.show_page(master.custom))
+                               command=lambda: controller.show_page(Custom))
 
         custom_btn.place(relx=0.5, rely=0.6, anchor="center")
 
         random_btn = CTkButton(master=self, text="Randomize", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                                bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                                border_width=5, height=75, width=BUTTON_SIZE,
-                               command=lambda: master.show_page(master.random))
+                               command=lambda: controller.show_page(Random))
 
         random_btn.place(relx=0.5, rely=0.7, anchor="center")
 
         back_btn = CTkButton(master=self, text="Back to Menu", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                              border_width=5, height=75, width=BUTTON_SIZE,
-                             command=lambda: master.show_page(master.menu))
+                             command=lambda: controller.show_page(Menu))
 
         back_btn.place(relx=0.5, rely=0.8, anchor="center")
 
 
 class Theory(CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+        self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
+
         bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
@@ -185,7 +202,7 @@ In the end, the object with a much lower mass might disappear while the object w
         back_btn = CTkButton(master=self, text="Back to Menu", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                              border_width=5, height=75, width=BUTTON_SIZE,
-                             command=lambda: master.show_page(master.menu))
+                             command=lambda: controller.show_page(Menu))
 
         back_btn.place(relx=0.1, rely=0.1, anchor="center")
 
@@ -195,10 +212,14 @@ In the end, the object with a much lower mass might disappear while the object w
                                     image=CTkImage(light_image=explanation_img, dark_image=explanation_img, size=(400, 250)))
         explanation_lbl.place(x=(SCR_WIDTH // 2 - 200), rely=0.7)
 
+
 class Default(CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+        self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
+
 
         bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
@@ -215,41 +236,98 @@ class Default(CTkFrame):
         back_btn = CTkButton(master=self, text="Back to Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                              border_width=5, height=75, width=BUTTON_SIZE,
-                             command=lambda: master.show_page(master.simulation))
+                             command=self.back_to_menu)
 
         back_btn.place(relx=0.1, rely=0.1, anchor="center")
 
         label = CTkButton(master=self,
-                                text="""Generates a solar system using the default preset.
+                          text="""Generates a solar system using the default preset.
 How fast would you like to run the simulation? Leave blank for default: 1""",
-                                fg_color="transparent",
-                                bg_color=SWEET_FLAG,
-                                border_color=WISTERIA,
-                                hover_color=SWEET_FLAG,
-                                border_width=5,
-                                font=CTkFont(family='Inter', size=24),
-                                text_color=(CANDY_DREAMS, CANDY_DREAMS),
-                                )
+                          fg_color="transparent",
+                          bg_color=SWEET_FLAG,
+                          border_color=WISTERIA,
+                          hover_color=SWEET_FLAG,
+                          border_width=5,
+                          font=CTkFont(family='Inter', size=24),
+                          text_color=(CANDY_DREAMS, CANDY_DREAMS),
+                          )
 
         label.place(relx=0.5, rely=0.5, anchor="center")
 
-        sim_speed = CTkEntry(master=self, font=("BRLNSDB", 64), text_color=CANDY_DREAMS,
-                             bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
-                             border_width=5, height=75, width=BUTTON_SIZE)
-
-        sim_speed.place(relx=0.5, rely=0.6, anchor="center")
+        self.sim_speed = CTkEntry(master=self, font=("BRLNSDB", 64), text_color=CANDY_DREAMS,
+                                  bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
+                                  border_width=5, height=75, width=BUTTON_SIZE)
+        self.sim_speed.insert(0, "1")
+        self.sim_speed.place(relx=0.5, rely=0.6, anchor="center")
 
         start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
-                             bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
-                             border_width=5, height=75, width=BUTTON_SIZE,
-                             command=lambda: master.show_page(master.menu))
+                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                              border_width=5, height=75, width=BUTTON_SIZE,
+                              command=self.start_simulation)
 
         start_btn.place(relx=0.5, rely=0.7, anchor="center")
 
+        self.solar_system = None
+        self.simulation_running = False
+        self.simulation_speed = 0.01
+        self.simulation_job = None
+
+    def create_default_system(self):
+        if hasattr(self, 'solar_system') and self.solar_system:
+            turtle.clearscreen()
+
+        self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
+
+        Sun("Sun 1", self.solar_system, 10000, (-200, 0), (0, 3))
+        Sun("Sun 2", self.solar_system, 10000, (200, 0), (0, -4))
+        Planet("Planet 1", None, self.solar_system, 500, (50, 0), (0, 11))
+        Planet("Planet 2", None, self.solar_system, 10, (-350, 0), (0, -10))
+        Planet("Planet 3", None, self.solar_system, 5, (0, 200), (-2, -7))
+
+    def run_simulation(self):
+        if not self.simulation_running:
+            return
+
+        self.solar_system.calculate_all_body_interactions()
+        self.solar_system.update_all()
+
+        self.simulation_job = self.after(int(self.simulation_speed * 1000), self.run_simulation)
+
+    def start_simulation(self):
+        try:
+            speed_input = float(self.sim_speed.get())
+            self.simulation_speed = max(0.001, 1 / speed_input * 0.01)
+        except ValueError:
+            self.simulation_speed = 0.01
+
+        self.stop_simulation()
+
+        self.create_default_system()
+
+        self.simulation_running = True
+        self.run_simulation()
+
+    def stop_simulation(self):
+        self.simulation_running = False
+        if self.simulation_job:
+            self.after_cancel(self.simulation_job)
+            self.simulation_job = None
+
+    def back_to_menu(self):
+        self.stop_simulation()
+
+        if hasattr(self, 'solar_system') and self.solar_system:
+            turtle.clearscreen()
+            turtle.bye()
+            self.solar_system = None
+
+        self.controller.show_page(Simulation)
 
 class Custom(CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+        self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
 
         bg_img = Image.open("../assets/bg.jpg")
@@ -290,7 +368,7 @@ class Custom(CTkFrame):
         back_btn = CTkButton(master=self, text="Back to Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                              border_width=5, height=75, width=BUTTON_SIZE,
-                             command=lambda: master.show_page(master.simulation))
+                             command=lambda: controller.show_page(Simulation))
 
         back_btn.place(relx=0.1, rely=0.1, anchor="center")
 
@@ -343,7 +421,7 @@ class Custom(CTkFrame):
         varmass = IntVar()
         mass = CTkSlider(master=self,
                          bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                         from_=0, to=1000,
+                         from_=0, to=10000,
                          variable=varmass)
         mass.place(relx=0.3,
                    rely=0.4,
@@ -366,7 +444,7 @@ class Custom(CTkFrame):
         varx_velo = IntVar()
         x_velo = CTkSlider(master=self,
                            bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                           from_=0, to=1000,
+                           from_=-20, to=20,
                            variable=varx_velo)
         x_velo.place(relx=0.3,
                      rely=0.5,
@@ -390,7 +468,7 @@ class Custom(CTkFrame):
         vary_velo = IntVar()
         y_velo = CTkSlider(master=self,
                            bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                           from_=0, to=1000,
+                           from_=-20, to=20,
                            variable=vary_velo)
         y_velo.place(relx=0.3,
                      rely=0.6,
@@ -414,7 +492,7 @@ class Custom(CTkFrame):
         varx_pos = IntVar()
         x_pos = CTkSlider(master=self,
                           bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                          from_=0, to=1000,
+                          from_=-500, to=500,
                           variable=varx_pos)
         x_pos.place(relx=0.3,
                     rely=0.7,
@@ -438,7 +516,7 @@ class Custom(CTkFrame):
         y_pos = CTkSlider(master=self,
                           bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG, corner_radius=1,
                           button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                          from_=0, to=1000,
+                          from_=-500, to=500,
                           variable=vary_pos)
         y_pos.place(relx=0.3,
                     rely=0.8,
@@ -451,38 +529,10 @@ class Custom(CTkFrame):
                     anchor="center")
 
 
-
-    #     '''if not(solarSystem==[]):
-    #         for astroObject in solarSystem:
-    #                 list=Label(frameList,text=f"""
-    # =================================================
-    # Name: {astroObject.name}
-    # Type: {astroObject.__class__.__name__}
-    # Mass: {astroObject.mass}
-    # Initial Position: X: {astroObject.xcor()} | Y: {astroObject.ycor()}
-    # Initial Velocity: X: {astroObject.velocity[0]} | Y: {astroObject.velocity[1]}
-    # =================================================
-    # """)
-    #                 list.pack()'''
-
-    # def faddstar():
-    #     validity=False
-    #     global error
-    #     try:
-    #         nameIn = str(name.get())
-    #         massIn = float(mass.get())
-    #         xIn = float(x_velo.get())
-    #         yIn = float(y_velo.get())
-    #         # xVelIn = float(xvelspace.get())
-    #         # yVelIn = float(yvelspace.get())
-    #         validity=True
-
-
 class Random(CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
+    def __init__(self, parent, controller):
+        super().__init__(master=parent)
         self.place(relwidth=1, relheight=1)
-
         bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
@@ -498,7 +548,7 @@ class Random(CTkFrame):
         back_btn = CTkButton(master=self, text="Back to Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                              border_width=5, height=75, width=BUTTON_SIZE,
-                             command=lambda: master.show_page(master.simulation))
+                             command=lambda: controller.show_page(Simulation))
 
         back_btn.place(relx=0.1, rely=0.1, anchor="center")
 
@@ -525,28 +575,39 @@ class Random(CTkFrame):
         start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                               bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                               border_width=5, height=75, width=BUTTON_SIZE,
-                              command=lambda: master.show_page(master.menu))
+                              command=lambda: controller.show_page(Menu))
 
         start_btn.place(relx=0.5, rely=0.7, anchor="center")
 
 
-class MainSimulation(Turtle):
-    def __init__(self):
-        super().__init__()
+class MainSimulation:
+    def __init__(self, master, sim_speed=1.0):
+        self.master = master
+        self.sim_speed = sim_speed
         self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
+        self.running = False
+
 
     def create_default_system(self):
-        solarSystem = {
-            "planets": (
-                Planet("", None, self, 500, (50, 0), (0, 11)),
-                Planet("", None, self, 10, (-350, 0), (0, -10)),
-                Planet("", None, self, 5, (0, 200), (-2, -7)),
-            ),
-            "suns": (
-                Sun("", self, 10000, (-200, 0), (0, 3)),
-                Sun("", self, 10000, (200, 0), (0, -4)),
-            )
-        }
+        self.solar_system.bodies = []
+        Sun("Sun 1", self.solar_system, 500, (-50, 0), (0, 0))
+        Sun("Sun 2", self.solar_system, 500, (100, 0), (0, -0))
+        Planet("Planet 1", None, self.solar_system, 500, (50, 0), (0, 11))
+        Planet("Planet 2", None, self.solar_system, 10, (-350, 0), (0, -10))
+        Planet("Planet 3", None, self.solar_system, 5, (0, 200), (-2, -7))
+
+    def start_simulation(self):
+        self.running = True
+        self.run_simulation()
+
+    def stop_simulation(self):
+        self.running = False
+
+    def run_simulation(self):
+        if self.running:
+            self.solar_system.calculate_all_body_interactions()
+            self.solar_system.update_all()
+            self.master.after(int(1 / self.sim_speed) * 25, self.run_simulation)
 
 
 if __name__ == "__main__":

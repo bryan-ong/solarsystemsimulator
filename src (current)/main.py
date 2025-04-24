@@ -7,44 +7,9 @@ from PIL import Image
 from const import *
 from solarsystem import *
 
-# from solarsystem import SolarSystem, Sun, Planet
 
 set_appearance_mode("dark")
-set_default_color_theme("dark-blue")
-
-
-# solar_system = SolarSystem(width = 1800, height = 800) # Set window dimensions, will change in future when implementing gui
-# startSimulation = False
-# choiceSelected = True
-# solarSystem = []
-# simulationSpeed = 0.01 # Simulation speed of 0.01 is equal to 1x speed (arbitrary units)
-# effectiveWidth = 1500 # Range where we spawn the planets
-# effectiveHeight = 750 # Here as well
-# minRadiusSun = BUTTON_SIZE # Minimum distance from the Sun
-# # All of these only apply to the random configuration
-# mass_scale = 0.75
-
-# error=None
-# speederror=None
-
-# def get_float(prompt):
-#     while True:
-#         try:
-#             return float(input(prompt))
-#         except ValueError:
-#             print("Please enter a valid number.")
-
-# def get_color_input():
-#     color_input = input("Enter color (leave blank for random color) [r g b] 0-255: ") # Input should be 3 numbers with no spaces
-#     if color_input.strip() == "": # We return none if blank
-#         return None
-#     else:
-#         try:
-#             r, g, b = map(float, color_input.split())
-#             return r / 255, g / 255, b / 255  # Normalize to 1.0F as that's what turtle.color() uses
-#         except (ValueError, TypeError):
-#             print("Invalid color input. Please enter three numbers for RGB.")
-#             return get_color_input()
+set_default_color_theme("blue")
 
 class App(CTk):
     def __init__(self):
@@ -216,6 +181,7 @@ In the end, the object with a much lower mass might disappear while the object w
 class Default(CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
+        self.solar_system = None
         self.controller = controller
         self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
@@ -267,14 +233,11 @@ How fast would you like to run the simulation? Leave blank for default: 1""",
 
         start_btn.place(relx=0.5, rely=0.7, anchor="center")
 
-        self.solar_system = None
         self.simulation_running = False
         self.simulation_speed = 0.01
         self.simulation_job = None
 
     def create_default_system(self):
-        if hasattr(self, 'solar_system') and self.solar_system:
-            turtle.clearscreen()
 
         self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
 
@@ -290,8 +253,16 @@ How fast would you like to run the simulation? Leave blank for default: 1""",
 
         self.solar_system.calculate_all_body_interactions()
         self.solar_system.update_all()
-
         self.simulation_job = self.after(int(self.simulation_speed * 1000), self.run_simulation)
+
+
+    def on_close(self):
+        self.stop_simulation()
+
+        if hasattr(self, 'solar_system') and self.solar_system:
+            self.solar_system = None
+            turtle.clearscreen()
+            turtle.bye()
 
     def start_simulation(self):
         try:
@@ -300,12 +271,16 @@ How fast would you like to run the simulation? Leave blank for default: 1""",
         except ValueError:
             self.simulation_speed = 0.01
 
-        self.stop_simulation()
 
         self.create_default_system()
+        print(self.solar_system)
 
         self.simulation_running = True
         self.run_simulation()
+        canvas = self.solar_system.get_screen().getcanvas()
+        root = canvas.winfo_toplevel()
+
+        root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def stop_simulation(self):
         self.simulation_running = False

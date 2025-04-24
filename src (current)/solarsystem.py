@@ -82,7 +82,6 @@ class Planet(SolarSystemBody):
         inputColor = randomize_color() if color is None else color
         self.color(inputColor, "white")
 
-
 class SolarSystem:
     def __init__(self, width, height):
         self.solar_system = turtle.Screen()
@@ -109,6 +108,9 @@ class SolarSystem:
         for body in self.bodies:
             body.draw()
         self.solar_system.update()
+
+    def get_screen(self):
+        return self.solar_system
 
     @staticmethod
     def accelerate_due_to_gravity(

@@ -1,15 +1,22 @@
 import threading
+import turtle
 from turtle import Turtle
 import time
+
+import PIL.ImageTk
 from customtkinter import *
 from tkinter import *
 from PIL import Image
 from const import *
 from solarsystem import *
-
+from random import randrange
 
 set_appearance_mode("dark")
-set_default_color_theme("blue")
+set_default_color_theme("dark-blue")
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)
+icon_path = os.path.join(project_root, "assets", "icon.ico")
 
 class App(CTk):
     def __init__(self):
@@ -21,6 +28,8 @@ class App(CTk):
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
+
+        self.iconbitmap(icon_path)
 
         self.frames = {}
         for F in (Menu, Simulation, Theory, Default, Custom, Random):
@@ -181,7 +190,6 @@ In the end, the object with a much lower mass might disappear while the object w
 class Default(CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
-        self.solar_system = None
         self.controller = controller
         self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
@@ -233,36 +241,36 @@ How fast would you like to run the simulation? Leave blank for default: 1""",
 
         start_btn.place(relx=0.5, rely=0.7, anchor="center")
 
+        self.solar_system = None
         self.simulation_running = False
         self.simulation_speed = 0.01
         self.simulation_job = None
 
+        # PLEASE DON'T MIND ALL THE EXCEPTIONS, IT WORKS...
+
     def create_default_system(self):
+        try:
+            turtle.reset()
+            turtle.hideturtle()
 
-        self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
+            self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
 
-        Sun("Sun 1", self.solar_system, 10000, (-200, 0), (0, 3))
-        Sun("Sun 2", self.solar_system, 10000, (200, 0), (0, -4))
-        Planet("Planet 1", None, self.solar_system, 500, (50, 0), (0, 11))
-        Planet("Planet 2", None, self.solar_system, 10, (-350, 0), (0, -10))
-        Planet("Planet 3", None, self.solar_system, 5, (0, 200), (-2, -7))
+            Sun("Sun 1", self.solar_system, 10000, (-200, 0), (0, 3))
+            Sun("Sun 2", self.solar_system, 10000, (200, 0), (0, -4))
+            Planet("Planet 1", None, self.solar_system, 500, (50, 0), (0, 11))
+            Planet("Planet 2", None, self.solar_system, 10, (-350, 0), (0, -10))
+            Planet("Planet 3", None, self.solar_system, 5, (0, 200), (-2, -7))
+        except:
+            pass
 
     def run_simulation(self):
-        if not self.simulation_running:
-            return
-
-        self.solar_system.calculate_all_body_interactions()
-        self.solar_system.update_all()
-        self.simulation_job = self.after(int(self.simulation_speed * 1000), self.run_simulation)
-
-
-    def on_close(self):
-        self.stop_simulation()
-
-        if hasattr(self, 'solar_system') and self.solar_system:
-            self.solar_system = None
-            turtle.clearscreen()
-            turtle.bye()
+        if self.simulation_running:
+            try:
+                self.solar_system.calculate_all_body_interactions()
+                self.solar_system.update_all()
+                self.simulation_job = self.after(int(self.simulation_speed * 1000), self.run_simulation)
+            except:
+                pass
 
     def start_simulation(self):
         try:
@@ -271,16 +279,16 @@ How fast would you like to run the simulation? Leave blank for default: 1""",
         except ValueError:
             self.simulation_speed = 0.01
 
+        if self.simulation_running:
+            self.simulation_running = False
+            if self.simulation_job:
+                self.after_cancel(self.simulation_job)
+                self.simulation_job = None
 
         self.create_default_system()
-        print(self.solar_system)
 
         self.simulation_running = True
         self.run_simulation()
-        canvas = self.solar_system.get_screen().getcanvas()
-        root = canvas.winfo_toplevel()
-
-        root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def stop_simulation(self):
         self.simulation_running = False
@@ -288,13 +296,19 @@ How fast would you like to run the simulation? Leave blank for default: 1""",
             self.after_cancel(self.simulation_job)
             self.simulation_job = None
 
+        if hasattr(self, 'solar_system') and self.solar_system:
+            self.solar_system.bodies = []
+
     def back_to_menu(self):
         self.stop_simulation()
 
-        if hasattr(self, 'solar_system') and self.solar_system:
-            turtle.clearscreen()
+        try:
+            turtle.reset()
             turtle.bye()
-            self.solar_system = None
+        except:
+            pass
+
+        self.solar_system = None
 
         self.controller.show_page(Simulation)
 
@@ -506,14 +520,17 @@ class Custom(CTkFrame):
 
 class Random(CTkFrame):
     def __init__(self, parent, controller):
-        super().__init__(master=parent)
+        super().__init__(parent)
+        self.controller = controller
+        self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
+
         bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
                           image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
 
-        title = CTkButton(master=self, text="DEFAULT", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
+        title = CTkButton(master=self, text="RANDOM", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
                           bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG,
                           border_color=WISTERIA, border_width=5,
                           width=SCR_WIDTH + 100, height=SCR_HEIGHT / 8)
@@ -523,12 +540,12 @@ class Random(CTkFrame):
         back_btn = CTkButton(master=self, text="Back to Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                              border_width=5, height=75, width=BUTTON_SIZE,
-                             command=lambda: controller.show_page(Simulation))
+                             command=self.back_to_menu)
 
         back_btn.place(relx=0.1, rely=0.1, anchor="center")
 
         label = CTkButton(master=self,
-                          text="""Generates a solar system using randomized values.
+                          text="""Generates a solar system using a randomized range of values.
     How fast would you like to run the simulation? Leave blank for default: 1""",
                           fg_color="transparent",
                           bg_color=SWEET_FLAG,
@@ -541,18 +558,101 @@ class Random(CTkFrame):
 
         label.place(relx=0.5, rely=0.5, anchor="center")
 
-        sim_speed = CTkEntry(master=self, font=("BRLNSDB", 64), text_color=CANDY_DREAMS,
-                             bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
-                             border_width=5, height=75, width=BUTTON_SIZE)
-
-        sim_speed.place(relx=0.5, rely=0.6, anchor="center")
+        self.sim_speed = CTkEntry(master=self, font=("BRLNSDB", 64), text_color=CANDY_DREAMS,
+                                  bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
+                                  border_width=5, height=75, width=BUTTON_SIZE)
+        self.sim_speed.insert(0, "1")
+        self.sim_speed.place(relx=0.5, rely=0.6, anchor="center")
 
         start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                               bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                               border_width=5, height=75, width=BUTTON_SIZE,
-                              command=lambda: controller.show_page(Menu))
+                              command=self.start_simulation)
 
         start_btn.place(relx=0.5, rely=0.7, anchor="center")
+
+        self.solar_system = None
+        self.simulation_running = False
+        self.simulation_speed = 0.01
+        self.simulation_job = None
+
+        # PLEASE DON'T MIND ALL THE EXCEPTIONS, IT WORKS...
+
+    def create_random_system(self):
+        effective_width = 1500
+        effective_height = 750
+        min_radius_sun = 200
+
+        try:
+            turtle.reset()
+            turtle.hideturtle()
+            self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
+
+            for i in range(randrange(3, 10)):
+                Planet("", None, self.solar_system, randrange(200, 500),
+                    (  # Extra logic to ensure the planets don't spawn too close to the sun
+                        randrange(int(-effective_width / 2), min_radius_sun) if bool(random.getrandbits(1)) else randrange(
+                            min_radius_sun, int(effective_width / 2)),
+                        randrange(int(-effective_height / 2), min_radius_sun) if bool(
+                            random.getrandbits(1)) else randrange(min_radius_sun, int(effective_height / 2))),
+                    (randrange(-5, 5), randrange(-5, 5))
+                )
+
+            Sun("", self.solar_system, 10000, (0, 0), (0, 0)),
+
+        except:
+            pass
+
+    def run_simulation(self):
+        if self.simulation_running:
+            try:
+                self.solar_system.calculate_all_body_interactions()
+                self.solar_system.update_all()
+                self.simulation_job = self.after(int(self.simulation_speed * 1000), self.run_simulation)
+            except:
+                pass
+
+    def start_simulation(self):
+        try:
+            speed_input = float(self.sim_speed.get())
+            self.simulation_speed = max(0.001, 1 / speed_input * 0.01)
+        except ValueError:
+            self.simulation_speed = 0.01
+
+        if self.simulation_running:
+            self.simulation_running = False
+            if self.simulation_job:
+                self.after_cancel(self.simulation_job)
+                self.simulation_job = None
+
+        self.create_random_system()
+
+        self.simulation_running = True
+        self.run_simulation()
+
+
+    def stop_simulation(self):
+        self.simulation_running = False
+        if self.simulation_job:
+            self.after_cancel(self.simulation_job)
+            self.simulation_job = None
+
+        if hasattr(self, 'solar_system') and self.solar_system:
+            self.solar_system.bodies = []
+
+    def back_to_menu(self):
+        self.stop_simulation()
+
+        try:
+            turtle.reset()
+            turtle.bye()
+        except:
+            pass
+
+        self.solar_system = None
+
+        self.controller.show_page(Simulation)
+
 
 
 class MainSimulation:

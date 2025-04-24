@@ -1,5 +1,6 @@
 import math
 import random
+import tkinter
 import turtle
 
 def randomize_color():
@@ -39,8 +40,11 @@ class SolarSystemBody(turtle.Turtle):
         self.dot(int(self.display_size))
 
     def move(self):
-        self.setx(self.xcor() + self.velocity[0])
-        self.sety(self.ycor() + self.velocity[1])
+        try:
+            self.setx(self.xcor() + self.velocity[0])
+            self.sety(self.ycor() + self.velocity[1])
+        except (tkinter.TclError, AttributeError):
+            pass
 
 
 class Sun(SolarSystemBody):
@@ -54,6 +58,8 @@ class Sun(SolarSystemBody):
     ):
         super().__init__(name, solar_system, mass, position, velocity)
         self.color("yellow")
+        self.hideturtle()
+
 
 class BlackHole(SolarSystemBody):
     def __init__(
@@ -66,6 +72,7 @@ class BlackHole(SolarSystemBody):
     ):
         super().__init__(name, solar_system, mass, position, velocity)
         self.color("black", "orange")
+
 
 class Planet(SolarSystemBody):
 
@@ -81,14 +88,15 @@ class Planet(SolarSystemBody):
         super().__init__(name, solar_system, mass, position, velocity)
         inputColor = randomize_color() if color is None else color
         self.color(inputColor, "white")
+        self.hideturtle()
 
 class SolarSystem:
     def __init__(self, width, height):
         self.solar_system = turtle.Screen()
         self.solar_system.tracer(0)
         self.solar_system.setup(width, height)
-        # self.solar_system.bgpic("bg.png")
-        self.solar_system.bgcolor("black")
+        self.solar_system.bgpic("bg.png")
+        # self.solar_system.bgcolor("white")
 
         self.bodies = []
     def add_body(self, body):

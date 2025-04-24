@@ -86,7 +86,6 @@ class Planet(SolarSystemBody):
 class SolarSystem:
     def __init__(self, width, height):
         self.solar_system = turtle.Screen()
-        self.solar_system._root.state('zoomed')
         self.solar_system.tracer(0)
         self.solar_system.setup(width, height)
         # self.solar_system.bgpic("bg.png")
@@ -110,6 +109,8 @@ class SolarSystem:
         for body in self.bodies:
             body.draw()
         self.solar_system.update()
+
+
 
     @staticmethod
     def accelerate_due_to_gravity(

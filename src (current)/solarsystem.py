@@ -59,7 +59,19 @@ class Sun(SolarSystemBody):
         super().__init__(name, solar_system, mass, position, velocity)
         self.color("yellow")
         self.hideturtle()
+        self.name = name
+        self.solar_system = solar_system
+        self.mass = mass
+        self.position = position
+        self.velocity = velocity
 
+    def __str__(self):
+        return f"""Name: {self.name}
+    Solar System: {self.solar_system}
+    Mass: {self.mass}
+    Position: {self.position}
+    Velocity: {self.velocity}
+    """
 
 class BlackHole(SolarSystemBody):
     def __init__(
@@ -89,6 +101,21 @@ class Planet(SolarSystemBody):
         inputColor = randomize_color() if color is None else color
         self.color(inputColor, "white")
         self.hideturtle()
+        self.name = name
+        self.color = color
+        self.solar_system = solar_system
+        self.mass = mass
+        self.position = position
+        self.velocity = velocity
+
+    def __str__(self):
+        return f"""Name: {self.name}
+Color: {self.color}
+Solar System: {self.solar_system}
+Mass: {self.mass}
+Position: {self.position}
+Velocity: {self.velocity}
+"""
 
 class SolarSystem:
     def __init__(self, width, height):

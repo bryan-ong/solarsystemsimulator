@@ -364,7 +364,7 @@ class Custom(CTkFrame):
 
         label.place(relx=0.75, rely=0.15, anchor="center")
 
-        self.list = CTkButton(master=self, text="", bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG,
+        self.list = CTkScrollableFrame(master=self,bg_color=SWEET_FLAG, fg_color="transparent",
                          border_color=WISTERIA,
                          border_width=5, height=SCR_HEIGHT // 2, width=BUTTON_SIZE * 3)
         self.list.place(relx=0.75, rely=0.5, anchor="center")
@@ -576,7 +576,7 @@ class Custom(CTkFrame):
                                  bg_color=SWEET_FLAG,
                                  fg_color="transparent",
                                  justify="left",)
-            displaylist.place(relx=0.05, rely=0.05+self.display_list_row)
+            displaylist.pack(padx=0.05, pady=0.05+self.display_list_row)
             self.display_list_row+=0.25
         else:
             print("error")

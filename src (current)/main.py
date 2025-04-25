@@ -166,23 +166,22 @@ class Theory(CTkFrame):
                                 )
         explanation.place(relx=0.5, rely=0.5, anchor="center")
 
-        explainationtext = CTkLabel(master=explanation,
-                                    text="- Objects usually move with a constant velocity in space. \n"
-                                         "- The moving direction changes due to gravity of objects nearby. \n"
-                                         "- All objects with mass exert gravity and attract each other. \n"
-                                         "- The higher the mass, the stronger the gravitational force is. \n"
-                                         "- High-velocity objects may escape this pull, while slower ones \n"
-                                         "might end up crashing into each other. \n"
-                                         "- Heavier objects tend to remain its moving direction. \n"
-                                         "- Object with a much lower mass might disappear while the object \n"
-                                         "with higher mass won’t.", fg_color="transparent",
-                                    bg_color=SWEET_FLAG,
-                                    height=270, width=1400,
-                                    font=CTkFont(family='Inter', size=24),
-                                    text_color=(CANDY_DREAMS, CANDY_DREAMS),
-                                    anchor="w",
-                                    justify="left")
-        explainationtext.place(relx=0.27, rely=0.05)
+        explaination_text = CTkLabel(master=explanation,
+                                     text="""- Objects usually move with a constant velocity in space.
+- The moving direction changes due to gravity of objects nearby.
+- All objects with mass exert gravity and attract each other.
+- The higher the mass, the stronger the gravitational force is.
+- High-velocity objects may escape this pull, while slower ones might end up crashing into each other.
+- Heavier objects tend to remain its moving direction.
+- Object with a much lower mass might disappear while the object with higher mass won’t.""",
+                                     fg_color="transparent",
+                                     bg_color=SWEET_FLAG,
+                                     height=270, width=1400,
+                                     font=CTkFont(family='Inter', size=24),
+                                     text_color=(CANDY_DREAMS, CANDY_DREAMS),
+                                     anchor="w",
+                                     justify="left")
+        explaination_text.place(relx=0.1, rely=0.05)
 
         back_btn = CTkButton(master=self, text="Back to Menu", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
@@ -364,21 +363,12 @@ class Custom(CTkFrame):
 
         label.place(relx=0.75, rely=0.15, anchor="center")
 
-        self.list = CTkScrollableFrame(master=self,bg_color=SWEET_FLAG, fg_color="transparent",
-                         border_color=WISTERIA,
-                         border_width=5, height=SCR_HEIGHT // 2, width=BUTTON_SIZE * 3)
-        self.list.place(relx=0.75, rely=0.5, anchor="center")
+        self.body_display_list = CTkScrollableFrame(master=self, bg_color=SWEET_FLAG, fg_color="transparent",
+                                                    border_color=WISTERIA, scrollbar_button_color=LILAC, scrollbar_button_hover_color="white", scrollbar_fg_color=PURPLE,
+                                                    border_width=5, height=SCR_HEIGHT // 2, width=BUTTON_SIZE * 2)
+        self.body_display_list.place(relx=0.75, rely=0.5, anchor="center")
 
-        start_btn = CTkButton(master=self,
-                              text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
-                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
-                              border_width=5, height=75, width=BUTTON_SIZE,
-                              command=self.getspeed
-                              )
 
-        start_btn.place(relx=0.75,
-                        rely=0.9,
-                        anchor="center")
 
         back_btn = CTkButton(master=self, text="Back to Simulate", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
@@ -422,12 +412,12 @@ class Custom(CTkFrame):
         self.var_name = StringVar()
 
         name = CTkEntry(master=self, font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
-                             bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
-                             border_width=5, height=75, width=BUTTON_SIZE * 1.5, textvariable=self.var_name)
+                        bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
+                        border_width=5, height=75, width=BUTTON_SIZE * 1.5, textvariable=self.var_name)
 
         name.place(relx=0.3,
-                        rely=0.3,
-                        anchor="center")
+                   rely=0.3,
+                   anchor="center")
 
         label = CTkButton(master=self,
                           text="Mass: ", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
@@ -438,9 +428,9 @@ class Custom(CTkFrame):
 
         self.var_mass = IntVar()
         mass = CTkSlider(master=self,
-                              bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
-                              corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                              from_=1, to=10000, variable=self.var_mass)
+                         bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
+                         corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
+                         from_=1, to=10000, variable=self.var_mass)
         mass.set(1)
         mass.place(relx=0.3, rely=0.4, anchor="center")
 
@@ -459,13 +449,13 @@ class Custom(CTkFrame):
         self.var_x_velo = IntVar()
 
         x_velo = CTkSlider(master=self,
-                                bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
-                                corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                                from_=-20, to=20,
-                                variable=self.var_x_velo)
+                           bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
+                           corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
+                           from_=-20, to=20,
+                           variable=self.var_x_velo)
         x_velo.place(relx=0.3,
-                          rely=0.5,
-                          anchor="center", )
+                     rely=0.5,
+                     anchor="center", )
         value = CTkButton(self, textvariable=self.var_x_velo, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
                           bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
                           border_width=5, height=75, width=75)
@@ -480,9 +470,9 @@ class Custom(CTkFrame):
 
         self.var_y_velo = IntVar()
         y_velo = CTkSlider(master=self, bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
-                                corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                                from_=-20, to=20,
-                                variable=self.var_y_velo)
+                           corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
+                           from_=-20, to=20,
+                           variable=self.var_y_velo)
         y_velo.place(relx=0.3, rely=0.6, anchor="center")
 
         value = CTkButton(self, textvariable=self.var_y_velo, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
@@ -499,10 +489,10 @@ class Custom(CTkFrame):
 
         self.var_x_pos = IntVar()
         x_pos = CTkSlider(master=self,
-                               bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
-                               corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                               from_=-500, to=500,
-                               variable=self.var_x_pos)
+                          bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
+                          corner_radius=1, button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
+                          from_=-500, to=500,
+                          variable=self.var_x_pos)
         x_pos.place(relx=0.3, rely=0.7, anchor="center")
 
         value = CTkButton(self, textvariable=self.var_x_pos, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
@@ -518,23 +508,51 @@ class Custom(CTkFrame):
         label.place(relx=0.1, rely=0.8, anchor="center")
         self.var_y_pos = IntVar()
         y_pos = CTkSlider(master=self,
-                               bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
-                               corner_radius=1,
-                               button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
-                               from_=-500, to=500,
-                               variable=self.var_y_pos)
+                          bg_color=WISTERIA, width=BUTTON_SIZE * 1.5, height=20, fg_color=SWEET_FLAG,
+                          corner_radius=1,
+                          button_color=LILAC, button_hover_color="white", progress_color=PURPLE,
+                          from_=-500, to=500,
+                          variable=self.var_y_pos)
         y_pos.place(relx=0.3, rely=0.8, anchor="center")
         value = CTkButton(self, textvariable=self.var_y_pos, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
                           bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
                           border_width=5, height=75, width=75)
         value.place(relx=0.43, rely=0.8, anchor="center")
 
+        sim_speed = CTkButton(master=self,
+                                              text="Simulation Speed: ", font=("BRLNSDB", 16), text_color=CANDY_DREAMS,
+                                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG, border_color=WISTERIA,
+                                              border_width=5, height=25, width=BUTTON_SIZE / 2,
+                                              )
+        sim_speed.place(relx=0.675, rely=0.85, anchor="center")
+
+        self.sim_speed = CTkEntry(master=self, font=("BRLNSDB", 24), text_color=CANDY_DREAMS,
+                                  bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
+                                  border_width=5, height=25, width=BUTTON_SIZE / 2)
+        self.sim_speed.insert(0, "1")
+        self.sim_speed.place(relx=0.675, rely=0.9, anchor="center")
+
+        start_btn = CTkButton(master=self,
+                              text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                              border_width=5, height=75, width=BUTTON_SIZE,
+                              command=lambda: self.start_simulation())
+
+        start_btn.place(relx=0.8, rely=0.875, anchor="center")
+
+        clear_btn = CTkButton(master=self,
+                              text="Clear List", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                              border_width=5, height=75, width=BUTTON_SIZE / 2,
+                              command=lambda: self.clear_list())
+
+        clear_btn.place(relx=0.95, rely=0.5, anchor="center")
+
         self.solar_system = None
         self.simulation_running = False
         self.simulation_speed = 0.01
         self.simulation_job = None
         self.body_list = []
-        self.display_list_row=0
 
     def add_celestial_body(self, body_type):
         # I want to only create the SolarSystem instance only when start_simulation is called (as creating the instance would open the turtle window immediately, disrupting the flow),
@@ -547,79 +565,43 @@ class Custom(CTkFrame):
         x_velo = self.var_x_velo.get()
         y_velo = self.var_y_velo.get()
 
-        pos_input_validity=True
+        pos_input_validity = True
 
         for body_data in self.body_list:
-            if not(body_data['position']==(x_pos, y_pos)):
-                pos_input_validity=True
-            else:
-                pos_input_validity=False
+            pos_input_validity = False if (body_data["position"]) == (x_pos, y_pos) else True
 
         if pos_input_validity:
             body_data = {
-                    'type': body_type,
-                    'name': name,
-                    'mass': mass,
-                    'position': (x_pos, y_pos),
-                    'velocity': (x_velo, y_velo)
-                }
+                'type': body_type,
+                'name': name,
+                'mass': mass,
+                'position': (x_pos, y_pos),
+                'velocity': (x_velo, y_velo)
+            }
 
             self.body_list.append(body_data)
-            print(f"Stored {body_type}: {name}")
-            displaylist=CTkLabel(master=self.list,
-                                 text=f"{body_type}: {name}\n "
-                                      f"Mass:{mass}\n"
-                                     f"Position: {(x_pos, y_pos)}\n"
-                                     f"Velocity:{(x_velo, y_velo)}",
-                                 font=("BRLNSDB", 19),
-                                 text_color=CANDY_DREAMS,
-                                 bg_color=SWEET_FLAG,
-                                 fg_color="transparent",
-                                 justify="left",)
-            displaylist.pack(padx=0.05, pady=0.05+self.display_list_row)
-            self.display_list_row+=0.25
+            body_display_list_entry = CTkLabel(master=self.body_display_list,
+                                               text=f"""{body_type}: {name}
+Mass: {mass}
+Position: {(x_pos, y_pos)}
+Velocity: {(x_velo, y_velo)}
+────────────
+""",
+                                               font=("BRLNSDB", 19),
+                                               text_color=CANDY_DREAMS,
+                                               bg_color=SWEET_FLAG,
+                                               fg_color="transparent",
+                                               justify="left")
+
+            body_display_list_entry.pack(padx=0.5, pady=0.1 + len(self.body_list) * 0.25, anchor="w")
         else:
-            print("error")
             messagebox.showinfo("Error", "Object's position is the same with other object")
-    def getspeed(self):
-        popup_bg=CTkButton(master=self,                          bg_color=SWEET_FLAG,
-                           fg_color="transparent",
-                           # bg_color=SWEET_FLAG,
-                           border_color=WISTERIA,
-                           hover_color=SWEET_FLAG,
-                           border_width=5,
-                           height=250,
-                           width=2000)
-        popup_bg.place(relx=0.5, rely=0.6, anchor="center")
 
-        label = CTkButton(master=self,
-                          text="""Generates a solar system using the default preset.
-How fast would you like to run the simulation? Leave blank for default: 1""",
-                          fg_color="transparent",
-                          bg_color=SWEET_FLAG,
-                          border_color=WISTERIA,
-                          hover_color=SWEET_FLAG,
-                          border_width=5,
-                          font=CTkFont(family='Inter', size=24),
-                          text_color=(CANDY_DREAMS, CANDY_DREAMS),
-                          )
+    def clear_list(self):
+        self.body_list = []
 
-        label.place(relx=0.5, rely=0.5, anchor="center")
-
-        self.sim_speed = CTkEntry(master=self, font=("BRLNSDB", 64), text_color=CANDY_DREAMS,
-                                  bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
-                                  border_width=5, height=75, width=BUTTON_SIZE)
-        self.sim_speed.insert(0, "1")
-        self.sim_speed.place(relx=0.5, rely=0.6, anchor="center")
-
-        start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
-                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
-                              border_width=5, height=75, width=BUTTON_SIZE,
-                              command=self.start_simulation)
-
-        start_btn.place(relx=0.5, rely=0.7, anchor="center")
-
-
+        for widget in self.body_display_list.winfo_children():
+            widget.destroy()
 
     def start_simulation(self):
         try:
@@ -651,10 +633,8 @@ How fast would you like to run the simulation? Leave blank for default: 1""",
         except:
             pass
 
-
         self.simulation_running = True
         self.run_simulation()
-
 
     def run_simulation(self):
         if self.simulation_running:
@@ -758,7 +738,7 @@ class Random(CTkFrame):
             turtle.hideturtle()
             self.solar_system = SolarSystem(SCR_WIDTH, SCR_HEIGHT)
 
-            for i in range(randrange(3, 10)):
+            for i in range(randrange(5, 15)):
                 Planet("", None, self.solar_system, randrange(200, 500),
                        (  # Extra logic to ensure the planets don't spawn too close to the sun
                            randrange(int(-effective_width / 2), min_radius_sun) if bool(
@@ -822,6 +802,7 @@ class Random(CTkFrame):
         self.solar_system = None
 
         self.controller.show_page(Simulation)
+
 
 if __name__ == "__main__":
     app = App()

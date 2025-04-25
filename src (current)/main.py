@@ -1,5 +1,6 @@
 import threading
 import turtle
+from tkinter import messagebox
 from turtle import Turtle
 import time
 
@@ -363,16 +364,16 @@ class Custom(CTkFrame):
 
         label.place(relx=0.75, rely=0.15, anchor="center")
 
-        list = CTkButton(master=self, text="", bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG,
+        self.list = CTkButton(master=self, text="", bg_color=SWEET_FLAG, fg_color="transparent", hover_color=SWEET_FLAG,
                          border_color=WISTERIA,
                          border_width=5, height=SCR_HEIGHT // 2, width=BUTTON_SIZE * 3)
-        list.place(relx=0.75, rely=0.5, anchor="center")
+        self.list.place(relx=0.75, rely=0.5, anchor="center")
 
         start_btn = CTkButton(master=self,
                               text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
                               bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
                               border_width=5, height=75, width=BUTTON_SIZE,
-                              command=lambda:self.start_simulation()
+                              command=self.getspeed
                               )
 
         start_btn.place(relx=0.75,
@@ -533,6 +534,7 @@ class Custom(CTkFrame):
         self.simulation_speed = 0.01
         self.simulation_job = None
         self.body_list = []
+        self.display_list_row=0
 
     def add_celestial_body(self, body_type):
         # I want to only create the SolarSystem instance only when start_simulation is called (as creating the instance would open the turtle window immediately, disrupting the flow),
@@ -545,21 +547,84 @@ class Custom(CTkFrame):
         x_velo = self.var_x_velo.get()
         y_velo = self.var_y_velo.get()
 
-        body_data = {
-            'type': body_type,
-            'name': name,
-            'mass': mass,
-            'position': (x_pos, y_pos),
-            'velocity': (x_velo, y_velo)
-        }
+        pos_input_validity=True
 
-        self.body_list.append(body_data)
-        print(f"Stored {body_type}: {name}")
+        for body_data in self.body_list:
+            if not(body_data['position']==(x_pos, y_pos)):
+                pos_input_validity=True
+            else:
+                pos_input_validity=False
+
+        if pos_input_validity:
+            body_data = {
+                    'type': body_type,
+                    'name': name,
+                    'mass': mass,
+                    'position': (x_pos, y_pos),
+                    'velocity': (x_velo, y_velo)
+                }
+
+            self.body_list.append(body_data)
+            print(f"Stored {body_type}: {name}")
+            displaylist=CTkLabel(master=self.list,
+                                 text=f"{body_type}: {name}\n "
+                                      f"Mass:{mass}\n"
+                                     f"Position: {(x_pos, y_pos)}\n"
+                                     f"Velocity:{(x_velo, y_velo)}",
+                                 font=("BRLNSDB", 19),
+                                 text_color=CANDY_DREAMS,
+                                 bg_color=SWEET_FLAG,
+                                 fg_color="transparent",
+                                 justify="left",)
+            displaylist.place(relx=0.05, rely=0.05+self.display_list_row)
+            self.display_list_row+=0.25
+        else:
+            print("error")
+            messagebox.showinfo("Error", "Object's position is the same with other object")
+    def getspeed(self):
+        popup_bg=CTkButton(master=self,                          bg_color=SWEET_FLAG,
+                           fg_color="transparent",
+                           # bg_color=SWEET_FLAG,
+                           border_color=WISTERIA,
+                           hover_color=SWEET_FLAG,
+                           border_width=5,
+                           height=250,
+                           width=2000)
+        popup_bg.place(relx=0.5, rely=0.6, anchor="center")
+
+        label = CTkButton(master=self,
+                          text="""Generates a solar system using the default preset.
+How fast would you like to run the simulation? Leave blank for default: 1""",
+                          fg_color="transparent",
+                          bg_color=SWEET_FLAG,
+                          border_color=WISTERIA,
+                          hover_color=SWEET_FLAG,
+                          border_width=5,
+                          font=CTkFont(family='Inter', size=24),
+                          text_color=(CANDY_DREAMS, CANDY_DREAMS),
+                          )
+
+        label.place(relx=0.5, rely=0.5, anchor="center")
+
+        self.sim_speed = CTkEntry(master=self, font=("BRLNSDB", 64), text_color=CANDY_DREAMS,
+                                  bg_color=PURPLE, fg_color="transparent", border_color=WISTERIA, justify="center",
+                                  border_width=5, height=75, width=BUTTON_SIZE)
+        self.sim_speed.insert(0, "1")
+        self.sim_speed.place(relx=0.5, rely=0.6, anchor="center")
+
+        start_btn = CTkButton(master=self, text="Start Simulation", font=("BRLNSDB", 32), text_color=CANDY_DREAMS,
+                              bg_color=SWEET_FLAG, fg_color="transparent", hover_color=WISTERIA, border_color=WISTERIA,
+                              border_width=5, height=75, width=BUTTON_SIZE,
+                              command=self.start_simulation)
+
+        start_btn.place(relx=0.5, rely=0.7, anchor="center")
+
+
 
     def start_simulation(self):
         try:
-            # speed_input = float(self.sim_speed.get())
-            speed_input = 1
+            speed_input = float(self.sim_speed.get())
+            # speed_input = 1
             self.simulation_speed = max(0.001, 1 / speed_input * 0.01)
         except ValueError:
             self.simulation_speed = 0.01

@@ -3,6 +3,9 @@ import random
 import tkinter
 import turtle
 
+import main
+
+
 def randomize_color():
     r = random.random()
     g = random.random()

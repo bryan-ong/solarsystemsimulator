@@ -1,5 +1,7 @@
-
+import PIL.Image
 from win32api import GetSystemMetrics
+
+import main
 
 MAJORELLE_BLUE = "#574ae2"
 AFTER_WORK_BLUE = "#222a68"
@@ -15,3 +17,5 @@ SCR_WIDTH = GetSystemMetrics(0)
 SCR_HEIGHT = GetSystemMetrics(1)
 
 BUTTON_SIZE = SCR_WIDTH // 8
+
+BG_IMG = PIL.Image.open("bg.jpg")

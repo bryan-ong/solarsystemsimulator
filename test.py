@@ -26,20 +26,20 @@ class MainMenu(CTk):
         super().__init__(**kwargs)
 
     def draw_main_menu(self):
-        bg_img = Image.open("../assets/bg.jpg")
+        bg_img = Image.open("bg.jpg")
         bg_lbl = CTkLabel(app, text="", image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, 1080)))
         bg_lbl.place(x=0, y=0)
 
         top_bar = CTkCanvas(master=app, bg=MAJORELLE_BLUE, width=SCR_WIDTH, height=36, bd=0, highlightthickness=0)
         top_bar.place(relx=0.5, rely=0, anchor="n")
 
-        exit_btn_img = Image.open("../assets/closebtn.png").convert("RGBA")
+        exit_btn_img = Image.open("closebtn.png").convert("RGBA")
         exit_btn = CTkButton(top_bar, image=CTkImage(dark_image=exit_btn_img, light_image=exit_btn_img),
                              text="", hover_color=POMPELMO, fg_color=MAJORELLE_BLUE, corner_radius=0, width=top_bar_height,
                              height=top_bar_height, command=quit_app)
         exit_btn.place(x=SCR_WIDTH, rely=0, anchor="ne")
 
-        mini_btn_img = Image.open("../assets/minibtn.png").convert("RGBA")
+        mini_btn_img = Image.open("minibtn.png").convert("RGBA")
         mini_btn = CTkButton(top_bar, image=CTkImage(dark_image=mini_btn_img, light_image=mini_btn_img),
                              text="", hover_color=POMPELMO, fg_color=MAJORELLE_BLUE, corner_radius=0, width=top_bar_height,
                              height=top_bar_height, command=self.iconify())

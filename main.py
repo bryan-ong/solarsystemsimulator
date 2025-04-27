@@ -15,11 +15,6 @@ from random import randrange
 set_appearance_mode("dark")
 set_default_color_theme("dark-blue")
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(script_dir)
-icon_path = os.path.join(project_root, "assets", "icon.ico")
-
-
 class App(CTk):
     def __init__(self):
         super().__init__()
@@ -31,7 +26,7 @@ class App(CTk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
-        self.iconbitmap(icon_path)
+        self.iconbitmap("icon.ico")
 
         self.frames = {}
         for F in (Menu, Simulation, Theory, Default, Custom, Random):
@@ -56,8 +51,7 @@ class Menu(CTkFrame):
         self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("../assets/bg.jpg")
-        bg_lbl = CTkLabel(self, image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+        bg_lbl = CTkLabel(self, image=CTkImage(light_image=BG_IMG, dark_image=BG_IMG, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
 
         label = CTkButton(master=self, text="GRAVISION", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
@@ -91,9 +85,8 @@ class Simulation(CTkFrame):
         self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
-                          image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+                          image=CTkImage(light_image=BG_IMG, dark_image=BG_IMG, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
 
         title = CTkButton(master=self, text="SIMULATE", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
@@ -140,9 +133,8 @@ class Theory(CTkFrame):
         self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
-                          image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+                          image=CTkImage(light_image=BG_IMG, dark_image=BG_IMG, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
 
         title = CTkButton(master=self, text="THEORY", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
@@ -190,7 +182,7 @@ class Theory(CTkFrame):
 
         back_btn.place(relx=0.1, rely=0.1, anchor="center")
 
-        explanation_img = Image.open("../assets/explanation.png")
+        explanation_img = Image.open("explanation.png")
         explanation_lbl = CTkButton(self, text="", bg_color=WISTERIA, hover_color=WISTERIA, fg_color="transparent",
                                     border_color=CANDY_DREAMS,
                                     border_width=5, width=420, height=270, corner_radius=5,
@@ -218,9 +210,8 @@ class Default(CTkFrame):
         self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
-                          image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+                          image=CTkImage(light_image=BG_IMG, dark_image=BG_IMG, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
 
         title = CTkButton(master=self, text="DEFAULT", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
@@ -343,9 +334,8 @@ class Custom(CTkFrame):
         self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
-                          image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+                          image=CTkImage(light_image=BG_IMG, dark_image=BG_IMG, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
 
         label = CTkButton(master=self,
@@ -675,9 +665,8 @@ class Random(CTkFrame):
         self.configure(fg_color="transparent")
         self.place(relwidth=1, relheight=1)
 
-        bg_img = Image.open("../assets/bg.jpg")
         bg_lbl = CTkLabel(self, text="",
-                          image=CTkImage(light_image=bg_img, dark_image=bg_img, size=(SCR_WIDTH, SCR_HEIGHT)))
+                          image=CTkImage(light_image=BG_IMG, dark_image=BG_IMG, size=(SCR_WIDTH, SCR_HEIGHT)))
         bg_lbl.place(x=0, y=0)
 
         title = CTkButton(master=self, text="RANDOM", font=("BRLNSDB", 96), text_color=CANDY_DREAMS,
